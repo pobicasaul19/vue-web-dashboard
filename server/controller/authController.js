@@ -4,7 +4,7 @@ const { loadUserCollection } = require('../config/db');
 
 // Generate access token
 const generateAccessToken = (userId) => {
-  return jwt.sign({ id: userId }, 'archTestKey', { expiresIn: '30m' });
+  return jwt.sign({ id: userId }, 'archTestKey', { expiresIn: '12h' });
 };
 
 // Login user
@@ -14,12 +14,14 @@ const login = async (req, res) => {
     const { userName, password } = req.body;
 
     // Validate input
-    if (!userName && !password) {
+    if (!userName || !password) {
       return res.status(400).json({ message: 'Please enter all fields.' });
     }
     // Find user by userName
-    const user = await usersCollection.findOne({ userName });
-    if (!user) {
+    // const user = await usersCollection.findOne({ userName });
+    const user = usersCollection.data.users.find(user => user)
+    const userExist = user.userName === userName
+    if (!userExist) {
       return res.status(404).json({ message: 'User does not exist.' });
     }
     // Compare passwords
