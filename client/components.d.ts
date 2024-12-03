@@ -20,6 +20,7 @@ declare module 'vue' {
     DataTable: typeof import('primevue/datatable')['default']
     DatePicker: typeof import('primevue/datepicker')['default']
     Dialog: typeof import('primevue/dialog')['default']
+    FileUpload: typeof import('primevue/fileupload')['default']
     FloatLabel: typeof import('primevue/floatlabel')['default']
     Galleria: typeof import('primevue/galleria')['default']
     HeaderView: typeof import('./src/components/HeaderView.vue')['default']

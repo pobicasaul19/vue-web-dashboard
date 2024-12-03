@@ -2,9 +2,6 @@
 import { ref, onMounted } from 'vue'
 import CompanyService from '../services/CompanyService'
 import type { Company } from '../models/Company'
-import { useAuthStore } from '../stores/useAuthStore'
-
-const authStore = useAuthStore()
 
 const companies = ref<Company[]>([])
 const loading = ref(true)
@@ -34,9 +31,8 @@ onMounted(() => {
 
 <template>
   <div class="flex flex-col space-y-10">
-    <app-user v-if="authStore.isEditor" />
-    <app-companies
-      v-if="authStore.isEditor"
+    <AppUser />
+    <AppCompanies
       :onGetCompany="onGetCompanies"
       :company="companies"
       :images="images"

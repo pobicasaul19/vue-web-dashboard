@@ -11,33 +11,21 @@ const { createCompany } = require('../../../controller/companyController');
  *       - Companies
  *     parameters:
  *       - in: query
- *         name: firstName
- *         description: User Firstname
+ *         name: name
+ *         description: Company Name
  *         required: true
  *         schema:
  *           type: string
  *       - in: query
- *         name: lastName
- *         description: User Lastname
+ *         name: logo
+ *         description: Company Logo
  *         required: true
  *         schema:
- *           type: string
- *       - in: query
- *         name: type
- *         description: User Type
- *         required: true
- *         schema:
- *           type: string
+ *           type: file
  *       - in: query
  *         name: status
- *         description: User Status
+ *         description: Company Status
  *         required: true
- *         schema:
- *           type: string
- *       - in: query
- *         name: password
- *         description: Password
- *         required: false
  *         schema:
  *           type: string
  *     responses:

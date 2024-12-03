@@ -3,15 +3,15 @@ const { editCompany } = require('../../../controller/companyController');
 
 /**
  * @swagger
- * /api/companies/{_id}:
+ * /api/companies/{uuid}:
  *   put:
  *     summary: Edit company
  *     tags:
  *       - Companies
  *     parameters:
  *       - in: path
- *         name: _id
- *         description: User ID
+ *         name: uuid
+ *         description: Company UUID
  *         required: true
  *         schema:
  *           type: string
@@ -47,5 +47,5 @@ const { editCompany } = require('../../../controller/companyController');
  */
 
 const router = express.Router();
-router.put('/:_id', editCompany);
+router.put('/:uuid', editCompany);
 module.exports = router;

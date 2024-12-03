@@ -1,0 +1,23 @@
+{
+  "users": [
+    {
+      "uuid": "fa47e38e-f1e9-445d-9f5a-205a0e59f04e",
+      "id": 1,
+      "firstName": "super",
+      "lastName": "admin",
+      "userName": "superadmin",
+      "type": "administrator",
+      "status": "active",
+      "password": "$2a$10$vtllem50mZCrNxtovMJvGecZc/D82ezOb1xElCtu1lNv7PTsBJdeC"
+    },
+    {
+      "uuid": "51508ada-6d59-4230-b2ba-1e38dbe4819f",
+      "id": 2,
+      "firstName": "User",
+      "lastName": "Admin",
+      "userName": "useradmin",
+      "type": "editor",
+      "status": "active"
+    }
+  ]
+}

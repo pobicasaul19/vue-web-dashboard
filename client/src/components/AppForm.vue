@@ -18,16 +18,20 @@
             />
           </template>
           <template v-if="items.type === 'textarea'">
-            <Textarea
-              v-model:model-value="formData[items.model]"
-              class="w-full"
-              rows="5"
-              cols="30"
+            <Textarea v-model="formData[items.model]" class="w-full" rows="5" cols="30" />
+          </template>
+          <template v-if="items.type === 'file'">
+            <FileUpload
+              mode="basic"
+              name="file"
+              accept="image/*"
+              :maxFileSize="1000000"
+              @select="onFileSelect"
             />
           </template>
           <template v-if="items.type === 'calendar'">
             <DatePicker
-              v-model:model-value="formData[items.model]"
+              v-model="formData[items.model]"
               :minDate="new Date()"
               showIcon
               fluid
@@ -38,7 +42,7 @@
           </template>
           <template v-if="items.type === 'select'">
             <Select
-              v-model:model-value="formData[items.model]"
+              v-model="formData[items.model]"
               :options="items.options"
               :option-value="items.label === 'Company' ? 'name' : 'value'"
               option-label="name"
@@ -75,7 +79,6 @@
 
 <script lang="ts" setup>
 import { ref, defineProps, watch, reactive } from 'vue'
-import type { UserPayload } from '../models/User'
 import { useToast } from 'primevue/usetoast'
 import { useAuthStore } from '../stores/useAuthStore'
 
@@ -83,25 +86,30 @@ const props = defineProps<{
   onGetData: () => void
   formData: Record<string, any>
   itemFields: Array<{
-    type: 'input' | 'select' | 'calendar' | 'textarea'
+    type: 'input' | 'select' | 'calendar' | 'textarea' | 'file'
     label: string
     model: any
     capitalize?: boolean
-    options?: Array<{ name: string; value: any }>
+    options?: {
+      [key: string]: any
+    }[]
   }>
-  user: UserPayload
   mode: 'create' | 'edit'
   create: (payload: Record<string, any>) => Promise<void>
-  update: (payload: Record<string, any>, _id: number) => Promise<void>
-  _id: number
+  update: (payload: Record<string, any>, uuid: string) => Promise<void>
+  uuid: string
   name: string
   isPublish: boolean
 }>()
 const emit = defineEmits(['close'])
 const showToast = useToast()
+const authStore = useAuthStore()
 
 const formData = reactive(props.formData)
 const loading = ref(false)
+const onFileSelect = (event: { files: File[] }) => {
+  formData.logo = event.files[0];
+}
 
 // Save or Update function
 const saveOrUpdate = async () => {
@@ -111,10 +119,10 @@ const saveOrUpdate = async () => {
     writer: `${authStore.userInfo?.firstName} ${authStore.userInfo?.lastName}`
   }
   const payload = { ...formData }
-  delete payload._id
+  console.log(payload)
   props.mode === 'create'
     ? await props.create(props.isPublish ? publishPayload : payload)
-    : await props.update(props.isPublish ? publishPayload : payload, props._id)
+    : await props.update(props.isPublish ? publishPayload : payload, props.uuid)
 }
 
 // Save logic
@@ -144,7 +152,6 @@ const onSave = async () => {
 }
 
 // Publish logic
-const authStore = useAuthStore()
 const isLoading = ref(false)
 const onPublish = async () => {
   isLoading.value = true
@@ -154,7 +161,7 @@ const onPublish = async () => {
       status: 'Published',
       editor: `${authStore.userInfo?.firstName} ${authStore.userInfo?.lastName}`
     }
-    await props.update(payload, props._id)
+    await props.update(payload, props.uuid)
     showToast.add({
       severity: 'success',
       summary: 'Published',
@@ -176,7 +183,7 @@ watch(
   (mode) => {
     if (mode === 'create') {
       Object.keys(formData).forEach((key) => (formData[key] = ''))
-    } else if (mode === 'edit' && props._id) {
+    } else if (mode === 'edit' && props.uuid) {
       Object.assign(formData, props.formData)
     }
   },

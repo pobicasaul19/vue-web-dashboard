@@ -1,5 +1,9 @@
 export const type = [
   {
+    name: 'Administrator',
+    value: 'administrator'
+  },
+  {
     name: 'Editor',
     value: 'editor'
   },

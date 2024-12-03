@@ -37,7 +37,7 @@ const createUser = async (req, res) => {
     const lastUser = counter(user, 'users')
     const userId = lastUser ? lastUser.id + 1 : 1;
     const newUser = {
-      uuid: uuid,
+      uuid,
       id: userId,
       firstName,
       lastName,
@@ -66,12 +66,12 @@ const createUser = async (req, res) => {
 const updateUser = async (req, res) => {
   try {
     const usersCollection = await loadUserCollection();
-    const { uuid } = req.params; // Extract `uuid` from URL params
-    const { firstName, lastName, type, status } = req.body; // Extract fields from request body
+    const { uuid } = req.params;
+    const { firstName, lastName, type, status } = req.body;
 
     // Validate input
     if (!firstName || !lastName || !type || !status) {
-      return res.status(400).json({ message: 'Please enter all fields.' });
+      return res.status(400).json({ message: 'Please enter all field!' });
     }
 
     // Find the user by UUID
@@ -92,8 +92,6 @@ const updateUser = async (req, res) => {
 
     // Save changes
     await usersCollection.write();
-
-    // Respond with success
     res.status(200).json({
       data: { ...usersCollection.data.users[userIndex], password: undefined }, // Exclude password
       metadata: { message: 'User updated successfully.' },

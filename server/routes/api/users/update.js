@@ -3,7 +3,7 @@ const { updateUser } = require('../../../controller/userController');
 
 /**
  * @swagger
- * /api/users/{_id}:
+ * /api/users/{uuid}:
  *   put:
  *     summary: Update User
  *     description: Update user info with the provided details.
@@ -11,8 +11,8 @@ const { updateUser } = require('../../../controller/userController');
  *       - Users
  *     parameters:
  *       - in: path
- *         name: _id
- *         description: User ID
+ *         name: uuid
+ *         description: User UUID
  *         required: true
  *         schema:
  *           type: string
@@ -48,5 +48,5 @@ const { updateUser } = require('../../../controller/userController');
  */
 
 const router = express.Router();
-router.put('/:_id', updateUser);
+router.put('/:uuid', updateUser);
 module.exports = router;

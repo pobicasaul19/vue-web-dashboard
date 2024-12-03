@@ -1,11 +1,11 @@
 const { loadCompanyCollection } = require('../config/db');
-const { ObjectId } = require('mongodb')
+const { uuid, counter } = require('../utils')
 
 // Get company list
 const getCompany = async (req, res) => {
   try {
     const companyCollection = await loadCompanyCollection();
-    const companies = await companyCollection.find({}).toArray();
+    const companies = companyCollection.data.companies
     res.status(200).json(companies);
   } catch (error) {
     res.status(500).json({ message: 'Server error' });
@@ -16,32 +16,36 @@ const getCompany = async (req, res) => {
 const createCompany = async (req, res) => {
   try {
     const companyCollection = await loadCompanyCollection();
-    const { logo, name, status } = req.body;
+    const { name, status } = req.body;
+    const file = req.file;
+    console.log(file)
 
-    if (!logo && !name && !status) {
-      return res.status(400).json({ message: 'Please enter all required fields.' });
+    if (!name || !status) {
+      return res.status(400).json({ message: 'Please enter all fields.' });
     }
 
-    const companyName = await companyCollection.findOne({ name });
-    if (companyName) {
-      return res.status(409).json({ message: 'Company already exists.' });
-    }
-
-    const counter = await companyCollection.countDocuments();
+    const baseUrl =  req.referer;
+    const imageUrl = `${baseUrl}-${file.filename}`;
+    const lastCompany = counter(companyCollection.data, 'companies');
+    const companyId = lastCompany ? lastCompany.id + 1 : 1;
     const newCompany = {
-      id: counter + 1,
-      logo,
+      uuid,
+      id: companyId,
       name,
+      logo: imageUrl,
       status
     };
 
-    await companyCollection.insertOne(newCompany);
+    companyCollection.data.companies.push(newCompany);
+    await companyCollection.write();
+
     res.status(201).json({
       data: { company: newCompany },
       metadata: { message: 'Company created successfully.' }
-    })
+    });
   } catch (error) {
-    res.status(500).json({ message: 'Server error' });
+    console.error('Error uploading file:', error);
+    res.status(500).json({ error: 'Internal Server Error' });
   }
 };
 
@@ -49,30 +53,23 @@ const createCompany = async (req, res) => {
 const editCompany = async (req, res) => {
   try {
     const companyCollection = await loadCompanyCollection();
-    const { _id } = req.params;
-    const { logo, name, status } = req.body;
+    const { uuid } = req.params;
+    const { name, status } = req.body;
+    const file = req.file;
 
-    if (!logo || !name || !status) {
+    if (!file || !name || !status) {
       return res.status(400).json({ message: 'Please enter all fields.' });
     }
 
-    const newId = new ObjectId(_id);
-    const company = await companyCollection.findOne({ _id: newId });
-    if (!company) {
-      return res.status(404).json({ message: 'Company not found.' });
-    };
-
-    const updateCompany = {
-      logo,
+    const companyIndex = companyCollection.data.companies.findIndex(t => t.uuid === uuid);
+    companyCollection.data.companies[companyIndex] = {
+      ...companyCollection.data.companies[companyIndex],
       name,
+      logo: file.filename,
       status
-    };
-    await companyCollection.updateOne(
-      { _id: newId },
-      { $set: updateCompany }
-    );
+    }
     res.status(200).json({
-      data: { ...updateCompany },
+      data: { ...companyCollection.data.companies[companyIndex] },
       metadata: { message: 'Company updated successfully' }
     })
   } catch (error) {

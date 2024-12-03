@@ -33,7 +33,9 @@ const toggleReadMore = (index: number) => {
   isExpanded.value[index] = !isExpanded.value[index]
 }
 
-onMounted(fetchArticles)
+onMounted(() => {
+  
+})
 </script>
 
 <template>

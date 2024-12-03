@@ -18,7 +18,7 @@ const companyForm = reactive<Record<string, any>>({
 
 const itemFields = [
   {
-    type: 'input',
+    type: 'file',
     label: 'Logo',
     model: 'logo'
   },
@@ -52,6 +52,8 @@ const onClickOpenCreate = () => {
   <div class="space-y-5">
     <h1 class="text-3xl font-medium">Company Management</h1>
     <app-button :editor="true" :onClick="onClickOpenCreate" label="Create Company" />
+
+    <pre>{{ images }}</pre>
     <div class="grid grid-cols-1 sm:grid-cols-2 gap-5">
       <Card v-for="(item, i) in images" :key="i">
         <template #header>
@@ -104,7 +106,7 @@ const onClickOpenCreate = () => {
       :itemFields="itemFields"
       :onGetData="props.onGetCompany"
       :update="CompanyService.updateCompany"
-      :_id="companyForm._id"
+      :uuid="companyForm.uuid"
       mode="edit"
       name="Company"
       @close="editCompany = false"

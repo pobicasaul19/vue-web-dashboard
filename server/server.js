@@ -1,12 +1,14 @@
+require('dotenv').config();
 const express = require('express');
 const bodyParser = require('body-parser');
 const cors = require('cors');
 const cookieParser = require('cookie-parser');
-require('dotenv').config();
 
 const swaggerUi = require('swagger-ui-express');
 const swaggerInfo = require('./swagger');
 const useMiddleware = require('./middleware/authMiddleware')
+
+const { upload } = require('./utils')
 
 const app = express();
 // Middelwares
@@ -33,22 +35,22 @@ app.use('/api/users', getUsers);
 app.use('/api/users', createUser);
 app.use('/api/users', updateUser);
 
-// Company routes
+// // Company routes
 const getCompanies = require('./routes/api/company');
 const createCompany = require('./routes/api/company/create');
 const updateCompany = require('./routes/api/company/update');
 app.use('/api/companies', getCompanies);
-app.use('/api/companies', createCompany);
-app.use('/api/companies', updateCompany);
+app.use('/api/companies', upload.single('file'), createCompany);
+app.use('/api/companies', upload.single('file'), updateCompany);
 
-// Article routes
-const getArticles = require('./routes/api/articles');
-const createArticle = require('./routes/api/articles/create');
-const updateArticle = require('./routes/api/articles/update');
-app.use('/api/articles', getArticles);
-app.use('/api/articles', createArticle);
-app.use('/api/articles', updateArticle);
+// // Article routes
+// const getArticles = require('./routes/api/articles');
+// const createArticle = require('./routes/api/articles/create');
+// const updateArticle = require('./routes/api/articles/update');
+// app.use('/api/articles', getArticles);
+// app.use('/api/articles', createArticle);
+// app.use('/api/articles', updateArticle);
 
 // Start the server
-const port = process.env.PORT || 5000;
-app.listen(port, () => console.log(`Server running on port ${port}`));
+const port = 5000;
+app.listen(port, () => console.log(`Swagger running on http://localhost:${port}/documentation`));

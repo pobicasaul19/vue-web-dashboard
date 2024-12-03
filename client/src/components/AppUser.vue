@@ -4,7 +4,6 @@ import UserService from '../services/UserService'
 import type { User, UserPayload } from '../models/User'
 import { type, status } from '../utils/types'
 
-
 const userForm = reactive<Record<string, any>>({
   firstName: '',
   lastName: '',
@@ -113,7 +112,7 @@ onMounted(() => {
       :itemFields="itemFields"
       :onGetData="onGetUsers"
       :update="UserService.updateUser"
-      :_id="userForm._id"
+      :uuid="userForm.uuid"
       mode="edit"
       name="User"
       @close="editUser = false"
