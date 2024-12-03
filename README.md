@@ -4,19 +4,10 @@
 ## Features
 * Login to the app via username and password
 * Restrict access to valid a User
-* Once logged in show the homepage for lastest article
-* Allow the Editor user to change the users details and company details
-* Allow the Editor user create and update articles - Published or For Edit status
 * Vue-3 (Frontend)
 * lowdb (DB)
 * Express.js and Node.js (Backend)
-
-You will find the base data file in `/data`
-
-## Credentials
-### Editor User
-
-### Writer User
+You will find the base data file in `server/config/data`
 
 ## Command for both Client-Side and Server-Side
 ```sh
