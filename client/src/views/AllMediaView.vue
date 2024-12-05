@@ -12,7 +12,7 @@ const onGetCompanies = async () => {
     const data = await CompanyService.getCompanies()
     companies.value = data
     images.value = companies.value.map((company) => ({
-      _id: company._id,
+      uuid: company.uuid,
       logo: company.logo,
       name: company.name,
       status: company.status
@@ -39,7 +39,12 @@ onMounted(() => {
       :loading="loading"
     />
 
-    <app-articles v-if="companies.length > 0" :onGetData="onGetCompanies" :company="companies" />
+    <AppArticles
+      v-if="companies.length > 0"
+      :onGetData="onGetCompanies"
+      :company="companies"
+      :isLoading="loading"
+    />
   </div>
 </template>
 

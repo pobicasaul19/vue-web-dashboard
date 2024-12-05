@@ -1,5 +1,6 @@
 const express = require('express');
 const { createCompany } = require('../../../controller/companyController');
+const { upload } = require('../../../middleware/multerMiddleware');
 
 /**
  * @swagger
@@ -9,6 +10,8 @@ const { createCompany } = require('../../../controller/companyController');
  *     description: Create a new company with the provided details.
  *     tags:
  *       - Companies
+ *     consumes:
+ *       - multipart/form-data
  *     parameters:
  *       - in: query
  *         name: name
@@ -16,8 +19,8 @@ const { createCompany } = require('../../../controller/companyController');
  *         required: true
  *         schema:
  *           type: string
- *       - in: query
- *         name: logo
+ *       - in: file
+ *         name: file
  *         description: Company Logo
  *         required: true
  *         schema:
@@ -35,6 +38,7 @@ const { createCompany } = require('../../../controller/companyController');
  *         description: Bad request
  */
 
+
 const router = express.Router();
-router.post('/create', createCompany);
+router.post('/create', upload.single('file'), createCompany);
 module.exports = router;

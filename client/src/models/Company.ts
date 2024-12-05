@@ -1,8 +1,7 @@
 export interface Company {
-  _id: number;
+  uuid: number;
   id: number;
-  logo: string;
+  logo: string,
   name: string;
-  value: string;
   status: string
 }

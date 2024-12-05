@@ -18,10 +18,8 @@ const login = async (req, res) => {
       return res.status(400).json({ message: 'Please enter all fields.' });
     }
     // Find user by userName
-    // const user = await usersCollection.findOne({ userName });
-    const user = usersCollection.data.users.find(user => user)
-    const userExist = user.userName === userName
-    if (!userExist) {
+    const user = usersCollection.data.users.find(user => user.userName === userName)
+    if (!user) {
       return res.status(404).json({ message: 'User does not exist.' });
     }
     // Compare passwords

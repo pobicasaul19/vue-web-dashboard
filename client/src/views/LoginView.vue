@@ -40,7 +40,8 @@ const login = async () => {
   try {
     const response = await LoginService.validateLogin(form.value)
     handleSuccess(response)
-  } catch (error) {
+  } catch (error: any) {
+    console.log(error)
     toast.add({
       severity: 'error',
       summary: 'Login Failed',

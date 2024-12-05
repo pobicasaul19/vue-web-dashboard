@@ -1,11 +1,11 @@
-const { loadCompanyCollection, loadArticleCollection, loadUserCollection } = require('../config/db');
-const { ObjectId } = require('mongodb');
+const { loadCompanyCollection, loadArticleCollection } = require('../config/db');
+const { uuid, counter } = require('../utils')
 
 // Get article lists
 const getArticles = async (req, res) => {
   try {
     const articleCollection = await loadArticleCollection();
-    const article = await articleCollection.find().sort({ createdAt: -1 }).toArray();
+    const article = articleCollection.data.articles
     res.status(200).json(article);
   } catch (error) {
     console.error(error);
@@ -17,11 +17,11 @@ const getArticles = async (req, res) => {
 const createArticle = async (req, res) => {
   try {
     const articleCollection = await loadArticleCollection();
-    const { company, image, title, link, date, content, status, writer, editor } = req.body;
+    const { company, title, link, date, content, status, writer, editor } = req.body;
+    const file = req.file;
 
-    // Validate required fields
-    if (!company && !image && !title && !link && !content) {
-      return res.status(400).json({ message: 'All required fields must be provided' });
+    if (!file || !company || !title || !link || !content) {
+      return res.status(400).json({ message: 'Please provide all required fields: Company, Image, Title, Link and Content.' });
     }
 
     // Validate URL format
@@ -29,26 +29,16 @@ const createArticle = async (req, res) => {
     if (!urlRegex.test(link)) {
       return res.status(400).json({ message: 'Invalid URL format' });
     }
-
-    // Validate Company
+    const fileUrl = `${req.protocol}://${req.get('host')}/assets/${file.filename}`;
     const companyCollection = await loadCompanyCollection();
-    const selectedCompany = await companyCollection.findOne({ id: company });
-
-    // Check for image file upload
-    const imageUrl = image;
-    if (req.file) {
-      imageUrl = `${req.protocol}://${req.get('host')}/uploads/${req.file.filename}`;
-    }
-    if (!imageUrl) {
-      return res.status(400).json({ message: 'Image is required (either upload a file or provide a URL)' });
-    }
-
-    // Prepare article data
-    const counter = await articleCollection.countDocuments();
+    const selectedCompany = companyCollection.data.companies.find(t => t.name === company);
+    const lastArticle = counter(articleCollection.data, 'articles');
+    const articleId = lastArticle ? lastArticle.id + 1 : 1
     const newArticle = {
-      id: counter + 1,
-      company: selectedCompany?.name,
-      image: imageUrl,
+      uuid,
+      id: articleId,
+      company: selectedCompany.name,
+      image: fileUrl,
       title,
       link,
       date: date ? new Date(date) : new Date(),
@@ -57,8 +47,8 @@ const createArticle = async (req, res) => {
       writer: writer || null,
       editor: editor || null,
     };
-
-    await articleCollection.insertOne(newArticle);
+    articleCollection.data.articles.push(newArticle);
+    await articleCollection.write();
     res.status(201).json({ message: 'Article created successfully' });
   } catch (error) {
     console.error(error);
@@ -71,46 +61,41 @@ const createArticle = async (req, res) => {
 const editArticle = async (req, res) => {
   try {
     const articleCollection = await loadArticleCollection();
-    const { _id } = req.params;
-    const { company, image, title, link, date, content, status, writer, editor } = req.body;
+    const { uuid } = req.params;
+    const { company, title, link, date, content, status, writer, editor } = req.body;
+    const file = req.file;
 
-    // Validate Article ID
-    if (!ObjectId.isValid(_id)) {
-      return res.status(400).json({ message: 'Invalid article ID' });
+    if (!company || !title || !link || !content) {
+      return res.status(400).json({ message: 'Please provide all required fields: Company, Title, Link and Content.' });
+    }
+    // Validate URL format
+    const urlRegex = /^(https?|ftp):\/\/[^\s/$.?#].[^\s]*$/;
+    if (!urlRegex.test(link)) {
+      return res.status(400).json({ message: 'Invalid URL format' });
     }
 
+    let fileUrl = null;
+    if (file) {
+      fileUrl = `${req.protocol}://${req.get('host')}/assets/${file.filename}`;
+    }
     const companyCollection = await loadCompanyCollection();
-    const selectedCompany = await companyCollection.findOne({ name: company });
-    if (!selectedCompany) {
-      return res.status(404).json({ message: 'Company not found' });
+    const selectedCompany = companyCollection.data.companies.find(t => t.name === company);
+    const articleIndex = articleCollection.data.articles.findIndex(t => t.uuid === uuid);
+    articleCollection.data.articles[articleIndex] = {
+      ...articleCollection.data.articles[articleIndex],
+      company: selectedCompany.name,
+      image: fileUrl || articleCollection.data.articles[articleIndex].image,
+      title,
+      link,
+      date,
+      content,
+      status,
+      writer,
+      editor
     }
-
-    // Update Article
-    const newId = new ObjectId(_id);
-    const article = await articleCollection.findOne({ _id: newId })
-    if (!article) {
-      return res.status(404).json({ message: 'Article ID not found' });
-    }
-
-    // Prepare update data
-    const updateData = {
-      ...(company && { company }),
-      ...(image && { image }),
-      ...(title && { title }),
-      ...(link && { link }),
-      ...(date && { date: date ? new Date(date) : new Date() }),
-      ...(content && { content }),
-      ...(status && { status }),
-      ...(writer && { writer }),
-      ...(editor && { editor }),
-    };
-    await articleCollection.updateOne(
-      { _id: newId },
-      { $set: updateData }
-    );
-
+    await articleCollection.write();
     res.status(200).json({
-      data: { ...updateData },
+      data: { ...articleCollection.data.articles[articleIndex] },
       metadata: { message: 'Article updated successfully' }
     });
   } catch (error) {

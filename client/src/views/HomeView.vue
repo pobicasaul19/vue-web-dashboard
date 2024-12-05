@@ -34,7 +34,7 @@ const toggleReadMore = (index: number) => {
 }
 
 onMounted(() => {
-  
+  fetchArticles()
 })
 </script>
 
@@ -48,7 +48,7 @@ onMounted(() => {
   </div>
 
   <div v-else class="flex flex-col sm:flex-row gap-5">
-    <Card v-for="(article, i) in articles.slice(0, 2)" :key="i" class='w-full sm:w-[30rem]'>
+    <Card v-for="(article, i) in articles.slice(0, 2)" :key="i" class="w-full sm:w-[30rem]">
       <template #header>
         <img :src="article.image" :alt="article.title" class="p-5 h-52 w-full object-contain" />
       </template>
@@ -71,10 +71,10 @@ onMounted(() => {
         <p class="m-0">
           {{ isExpanded[i] ? article.content : truncateContent(article.content) }}
           <span
-            class="text-blue-300 cursor-pointer underline underline-offset-2 text-sm ml-1"
+            class="text-blue-300 cursor-pointer text-xs ml-1"
             @click="toggleReadMore(i)"
           >
-            {{ isExpanded[i] ? 'Show less' : 'Read more...' }}
+            {{ isExpanded[i] ? 'Show less' : 'Read more' }}
           </span>
         </p>
       </template>

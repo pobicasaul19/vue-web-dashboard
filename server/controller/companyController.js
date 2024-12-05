@@ -18,34 +18,31 @@ const createCompany = async (req, res) => {
     const companyCollection = await loadCompanyCollection();
     const { name, status } = req.body;
     const file = req.file;
-    console.log(file)
 
-    if (!name || !status) {
-      return res.status(400).json({ message: 'Please enter all fields.' });
+    if (!file || !name || !status) {
+      return res.status(400).json({ message: 'Please provide all required fields: name, status, and logo.' });
     }
 
-    const baseUrl =  req.referer;
-    const imageUrl = `${baseUrl}-${file.filename}`;
+    const fileUrl = `${req.protocol}://${req.get('host')}/assets/${file.filename}`;
     const lastCompany = counter(companyCollection.data, 'companies');
     const companyId = lastCompany ? lastCompany.id + 1 : 1;
     const newCompany = {
       uuid,
       id: companyId,
+      logo: fileUrl,
       name,
-      logo: imageUrl,
       status
     };
 
     companyCollection.data.companies.push(newCompany);
     await companyCollection.write();
-
     res.status(201).json({
       data: { company: newCompany },
       metadata: { message: 'Company created successfully.' }
     });
   } catch (error) {
     console.error('Error uploading file:', error);
-    res.status(500).json({ error: 'Internal Server Error' });
+    res.status(500).json({ message: 'Internal Server Error' });
   }
 };
 
@@ -57,17 +54,23 @@ const editCompany = async (req, res) => {
     const { name, status } = req.body;
     const file = req.file;
 
-    if (!file || !name || !status) {
-      return res.status(400).json({ message: 'Please enter all fields.' });
+    if (!name || !status) {
+      return res.status(400).json({ message: 'Please provide all required fields: name, status.' });
+    }
+
+    let fileUrl = null;
+    if (file) {
+      fileUrl = `${req.protocol}://${req.get('host')}/assets/${file.filename}`;
     }
 
     const companyIndex = companyCollection.data.companies.findIndex(t => t.uuid === uuid);
     companyCollection.data.companies[companyIndex] = {
       ...companyCollection.data.companies[companyIndex],
+      logo: fileUrl || companyCollection.data.companies[companyIndex].logo,
       name,
-      logo: file.filename,
       status
     }
+    await companyCollection.write();
     res.status(200).json({
       data: { ...companyCollection.data.companies[companyIndex] },
       metadata: { message: 'Company updated successfully' }

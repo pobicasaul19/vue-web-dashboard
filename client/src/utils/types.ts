@@ -4,6 +4,10 @@ export const type = [
     value: 'administrator'
   },
   {
+    name: 'User',
+    value: 'user'
+  },
+  {
     name: 'Editor',
     value: 'editor'
   },

@@ -7,13 +7,16 @@ const getUsers = async (req, res) => {
   try {
     const usersCollection = await loadUserCollection();
     const users = usersCollection.data.users;
-    const excluddPassword = users.map(({ password, ...users }) => users);
-    res.status(200).json(excluddPassword);
+    const sortedUsers = users
+      .map(({ password, ...users }) => users)
+      .sort((a, b) => a.id - b.id);
+    res.status(200).json(sortedUsers);
   } catch (error) {
     console.error(error);
     res.status(500).json({ message: 'Failed to retrieve users.' });
   }
 };
+
 
 // Create user
 const createUser = async (req, res) => {
@@ -76,10 +79,6 @@ const updateUser = async (req, res) => {
 
     // Find the user by UUID
     const userIndex = usersCollection.data.users.findIndex(user => user.uuid === uuid);
-    if (userIndex === -1) {
-      return res.status(404).json({ message: 'User not found.' });
-    }
-
     // Update user fields
     usersCollection.data.users[userIndex] = {
       ...usersCollection.data.users[userIndex], // Preserve other user properties

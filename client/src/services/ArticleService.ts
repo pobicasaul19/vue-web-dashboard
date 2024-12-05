@@ -7,7 +7,6 @@ class ArticleService {
     const response = await authorizedHttpClient.get<Article[]>(
       ARTICLE_ENDPOINT.GET_ALL
     );
-    console.log(response)
     return response as Article[];
   }
 
@@ -19,9 +18,9 @@ class ArticleService {
     return response.data as any;
   }
 
-  public async updateArticle(payload: ArticlePayload, _id: number): Promise<void> {
+  public async updateArticle(payload: ArticlePayload, uuid: string): Promise<void> {
     const response = await authorizedHttpClient.put<string, ArticlePayload>(
-      ARTICLE_ENDPOINT.UPDATE(_id),
+      ARTICLE_ENDPOINT.UPDATE(uuid),
       payload
     );
 

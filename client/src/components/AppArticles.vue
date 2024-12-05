@@ -8,13 +8,13 @@ import type { Company } from '../models/Company'
 const props = defineProps<{
   onGetData: () => void
   company: Company[]
+  isLoading: boolean
 }>()
 
-const authStore = useAuthStore();
+const authStore = useAuthStore()
 
 const articleForm = reactive<Record<string, any>>({
   company: props.company,
-  image: '',
   title: '',
   link: '',
   date: null,
@@ -23,7 +23,6 @@ const articleForm = reactive<Record<string, any>>({
 
 const resetArticleForm = () => {
   articleForm.company = ''
-  articleForm.image = ''
   articleForm.title = ''
   articleForm.link = ''
   articleForm.date = null
@@ -59,11 +58,11 @@ const itemFields = [
   {
     type: 'select',
     label: 'Company',
-    model: props.company,
+    model: 'company',
     options: props.company
   },
   {
-    type: 'input',
+    type: 'file',
     label: 'Image',
     model: 'image'
   },
@@ -115,9 +114,7 @@ onMounted(() => {
       <Column field="title" header="Title" />
       <Column field="link" header="Link">
         <template #body="{ data }">
-          <a class="underline underline-offset-2" :href="data.link" target="_blank">{{
-            data.link
-          }}</a>
+          <a class="underline underline-offset-2 text-indigo-800" :href="data.link" target="_blank" v-html="'Source'" />
         </template>
       </Column>
       <Column field="" header="Writer">
@@ -170,7 +167,7 @@ onMounted(() => {
       :formData="articleForm"
       :itemFields="itemFields"
       :update="ArticleService.updateArticle"
-      :_id="articleForm._id"
+      :uuid="articleForm.uuid"
       mode="edit"
       name="Article"
       @close="editUser = false"

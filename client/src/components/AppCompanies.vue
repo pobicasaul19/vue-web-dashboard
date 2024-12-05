@@ -11,7 +11,6 @@ const props = defineProps<{
 }>()
 
 const companyForm = reactive<Record<string, any>>({
-  logo: '',
   name: '',
   status: ''
 })
@@ -52,8 +51,6 @@ const onClickOpenCreate = () => {
   <div class="space-y-5">
     <h1 class="text-3xl font-medium">Company Management</h1>
     <app-button :editor="true" :onClick="onClickOpenCreate" label="Create Company" />
-
-    <pre>{{ images }}</pre>
     <div class="grid grid-cols-1 sm:grid-cols-2 gap-5">
       <Card v-for="(item, i) in images" :key="i">
         <template #header>
@@ -64,7 +61,7 @@ const onClickOpenCreate = () => {
         </template>
         <template #title>
           <p class="flex flex-col items-start sm:items-center sm:flex-row sm:space-x-1">
-            <span> {{ item.name }} - </span>
+            <span class="capitalize"> {{ item.name }} - </span>
             <span
               :class="[
                 'text-base capitalize',

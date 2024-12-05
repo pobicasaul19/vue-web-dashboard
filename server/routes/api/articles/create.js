@@ -1,20 +1,30 @@
 const express = require('express');
 const { createArticle } = require('../../../controller/articleController');
+const { upload } = require('../../../middleware/multerMiddleware');
 
 /**
  * @swagger
  * /api/articles/create:
  *   post:
  *     summary: Create article
+ *     description: Create a article with the provided details.
  *     tags:
  *       - Articles
+ *     consumes:
+ *       - multipart/form-data
  *     parameters:
  *       - in: query
  *         name: company
- *         description: Company ID related to the article
+ *         description: Company name related to the article
  *         required: true
  *         schema:
  *           type: string
+ *       - in: file
+ *         name: file
+ *         description: Upload Article Image
+ *         required: true
+ *         schema:
+ *           type: file
  *       - in: query
  *         name: title
  *         description: Article title
@@ -29,8 +39,8 @@ const { createArticle } = require('../../../controller/articleController');
  *           type: string
  *       - in: query
  *         name: date
- *         description: Article publication date (defaults to the current date if not provided)
- *         required: false
+ *         description: Article publication date
+ *         required: true
  *         schema:
  *           type: string
  *       - in: query
@@ -39,19 +49,13 @@ const { createArticle } = require('../../../controller/articleController');
  *         required: true
  *         schema:
  *           type: string
- *       - in: query
- *         name: image
- *         description: URL of the article image
- *         required: true
- *         schema:
- *           type: string
  *     responses:
- *       200:
- *         description: Successfully created
+ *       201:
+ *         description: Successfully updated
  *       400:
  *         description: Bad request
  */
 
 const router = express.Router();
-router.post('/create', createArticle);
+router.post('/create', upload.single('file'), createArticle);
 module.exports = router;

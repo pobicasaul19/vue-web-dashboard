@@ -1,5 +1,5 @@
-<template>
-  <form class="space-y-10">
+ <template>
+  <form class="space-y-10" enctype="multipart/form-data">
     <div class="flex flex-col gap-5 w-full">
       <div v-for="(items, i) in itemFields" :key="i" class="flex">
         <div
@@ -9,7 +9,7 @@
           <p class="m-0">{{ items.label }}</p>
           <span>:</span>
         </div>
-        <div class="w-3/4">
+        <div class="w-3/4 flex items-start">
           <template v-if="items.type === 'input'">
             <InputText
               v-model="formData[items.model]"
@@ -22,12 +22,14 @@
           </template>
           <template v-if="items.type === 'file'">
             <FileUpload
+              ref="file"
               mode="basic"
               name="file"
               accept="image/*"
               :maxFileSize="1000000"
               @select="onFileSelect"
             />
+            <!-- <InputText v-model="formData[items.model]" class="w-full" rows="5" cols="30" v-else /> -->
           </template>
           <template v-if="items.type === 'calendar'">
             <DatePicker
@@ -47,14 +49,14 @@
               :option-value="items.label === 'Company' ? 'name' : 'value'"
               option-label="name"
               appendTo="body"
-              class="w-full"
+              class="w-full capitalize"
             />
           </template>
         </div>
       </div>
       <div class="flex items-center justify-center space-x-5">
         <Button
-          @click.prevent="onSave"
+          @click.prevent='onSave'
           :loading="loading"
           type="submit"
           label="Save"
@@ -63,10 +65,10 @@
           class="!bg-[#0799c7] w-36 h-14 rounded-xl text-start !border-transparent"
         />
         <Button
+          @click.prevent='onPublish'
           v-if="props.isPublish"
           :loading="isLoading"
           type="submit"
-          @click.prevent="onPublish"
           label="Publish"
           icon="pi pi-file-check"
           iconPos="right"
@@ -81,6 +83,7 @@
 import { ref, defineProps, watch, reactive } from 'vue'
 import { useToast } from 'primevue/usetoast'
 import { useAuthStore } from '../stores/useAuthStore'
+import { InputText } from 'primevue'
 
 const props = defineProps<{
   onGetData: () => void
@@ -99,27 +102,33 @@ const props = defineProps<{
   update: (payload: Record<string, any>, uuid: string) => Promise<void>
   uuid: string
   name: string
-  isPublish: boolean
+  isPublish?: boolean
 }>()
+
 const emit = defineEmits(['close'])
 const showToast = useToast()
 const authStore = useAuthStore()
 
 const formData = reactive(props.formData)
+const filePayload = ref<File | null>(null)
 const loading = ref(false)
+const isLoading = ref(false)
 const onFileSelect = (event: { files: File[] }) => {
-  formData.logo = event.files[0];
+  filePayload.value = event.files[0]
 }
 
 // Save or Update function
 const saveOrUpdate = async () => {
-  const publishPayload = {
+  const payload: Record<string, any> = { ...formData }
+  const publishPayload: Record<string, any> = {
     ...formData,
     status: 'For Edit',
     writer: `${authStore.userInfo?.firstName} ${authStore.userInfo?.lastName}`
   }
-  const payload = { ...formData }
-  console.log(payload)
+  if (filePayload.value) {
+    payload.file = filePayload.value
+    publishPayload.file = filePayload.value
+  }
   props.mode === 'create'
     ? await props.create(props.isPublish ? publishPayload : payload)
     : await props.update(props.isPublish ? publishPayload : payload, props.uuid)
@@ -138,13 +147,13 @@ const onSave = async () => {
     })
     props.onGetData()
     emit('close')
-  } catch (error) {
+  } catch (error: any) {
     console.log(error)
     showToast.add({
       severity: 'error',
       summary: 'Error',
-      detail: 'Please add all fields.',
-      life: 3000
+      detail: error.response?.data?.message || error.message,
+      life: 5000
     })
   } finally {
     loading.value = false
@@ -152,7 +161,6 @@ const onSave = async () => {
 }
 
 // Publish logic
-const isLoading = ref(false)
 const onPublish = async () => {
   isLoading.value = true
   try {

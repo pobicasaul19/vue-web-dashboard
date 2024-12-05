@@ -18,9 +18,9 @@ class UserService {
     return response.data as any;
   }
 
-  public async updateCompany(payload: Company, _id: number): Promise<void> {
+  public async updateCompany(payload: Company, uuid: string): Promise<void> {
     const response = await authorizedHttpClient.put<string, Company>(
-      COMPANY_ENDPOINTS.UPDATE(_id),
+      COMPANY_ENDPOINTS.UPDATE(uuid),
       payload
     );
 

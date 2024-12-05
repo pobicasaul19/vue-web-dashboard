@@ -1,14 +1,11 @@
-import axios, {
-  AxiosError,
-  type AxiosInstance,
-} from "axios";
+import axios, { AxiosError, type AxiosInstance } from "axios";
 import { axiosConfig, tokenInjector } from './apiConfig';
 import router from "@/router";
 
 export interface ApiError {
   message: string;
   status?: number | null;
-  details?: any;
+  details?: Record<string, any>;
 }
 
 export type ApiResponse<T> = {
@@ -23,9 +20,30 @@ class HttpClient {
       baseURL: axiosConfig.baseURL,
       headers: {
         Accept: "application/json",
-        "Content-Type": "application/json",
       },
+      timeout: 10000,
     });
+  }
+
+  // Utility to determine content type
+  private preparePayload(payload: any): { data: any; headers: any } {
+    if (payload instanceof FormData) {
+      return { data: payload, headers: { "Content-Type": "multipart/form-data" } };
+    }
+
+    if (Object.values(payload).some((value) => value instanceof File)) {
+      const formData = new FormData();
+      Object.entries(payload).forEach(([key, value]) => {
+        if (value instanceof File) {
+          formData.append(key, value);
+        } else {
+          formData.append(key, value as string);
+        }
+      });
+      return { data: formData, headers: { "Content-Type": "multipart/form-data" } };
+    }
+
+    return { data: payload, headers: { "Content-Type": "application/json" } };
   }
 
   // Helper method to handle responses
@@ -40,12 +58,14 @@ class HttpClient {
   }
 
   public async post<T, P>(path: string, payload: P): Promise<ApiResponse<T>> {
-    const response = await this.axiosInstance.post<T>(path, payload);
+    const { data, headers } = this.preparePayload(payload);
+    const response = await this.axiosInstance.post<T>(path, data, { headers });
     return this.handleResponse<T>(response);
   }
 
   public async put<T, P>(path: string, payload: P): Promise<ApiResponse<T>> {
-    const response = await this.axiosInstance.put<T>(path, payload);
+    const { data, headers } = this.preparePayload(payload);
+    const response = await this.axiosInstance.put<T>(path, data, { headers });
     return this.handleResponse<T>(response);
   }
 

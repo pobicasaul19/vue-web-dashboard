@@ -1,5 +1,6 @@
 const express = require('express');
 const { editCompany } = require('../../../controller/companyController');
+const { upload } = require('../../../middleware/multerMiddleware');
 
 /**
  * @swagger
@@ -8,44 +9,34 @@ const { editCompany } = require('../../../controller/companyController');
  *     summary: Edit company
  *     tags:
  *       - Companies
+ *     consumes:
+ *       - multipart/form-data
  *     parameters:
- *       - in: path
- *         name: uuid
- *         description: Company UUID
- *         required: true
- *         schema:
- *           type: string
  *       - in: query
- *         name: firstName
- *         description: User Firstname
+ *         name: name
+ *         description: Company Name
  *         required: true
  *         schema:
  *           type: string
- *       - in: query
- *         name: lastName
- *         description: User Lastname
+ *       - in: file
+ *         name: file
+ *         description: Company Logo
  *         required: true
  *         schema:
- *           type: string
- *       - in: query
- *         name: type
- *         description: User Type
- *         required: true
- *         schema:
- *           type: string
+ *           type: file
  *       - in: query
  *         name: status
- *         description: User Status
+ *         description: Company Status
  *         required: true
  *         schema:
  *           type: string
  *     responses:
  *       201:
- *         description: Successfully updated
+ *         description: Successfully registered
  *       400:
  *         description: Bad request
  */
 
 const router = express.Router();
-router.put('/:uuid', editCompany);
+router.put('/:uuid', upload.single('file'), editCompany);
 module.exports = router;

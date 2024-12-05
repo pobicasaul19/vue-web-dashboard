@@ -1,17 +1,20 @@
 const express = require('express');
 const { editArticle } = require('../../../controller/articleController');
+const { upload } = require('../../../middleware/multerMiddleware');
 
 /**
  * @swagger
- * /api/articles/{_id}:
+ * /api/articles/{uuid}:
  *   put:
  *     summary: Edit article
  *     tags:
  *       - Articles
+ *     consumes:
+ *       - multipart/form-data
  *     parameters:
  *       - in: path
- *         name: _id
- *         description: Article ID
+ *         name: uuid
+ *         description: Article UUID
  *         required: true
  *         schema:
  *           type: string
@@ -46,11 +49,11 @@ const { editArticle } = require('../../../controller/articleController');
  *         schema:
  *           type: string
  *       - in: query
- *         name: imageUrl
- *         description: URL of the article image
- *         required: false
+ *         name: file
+ *         description: Upload Article Image
+ *         required: true
  *         schema:
- *           type: string
+ *           type: file
  *     responses:
  *       201:
  *         description: Successfully updated
@@ -59,5 +62,5 @@ const { editArticle } = require('../../../controller/articleController');
  */
 
 const router = express.Router();
-router.put('/:_id', editArticle);
+router.put('/:uuid', upload.single('file'), editArticle);
 module.exports = router;
