@@ -108,13 +108,24 @@ onMounted(() => {
       </template>
       <Column header="Image">
         <template #body="{ data }">
-          <img :src="data.image" :alt="data.image" class="w-24 rounded object-contain" />
+          <img
+            :src="data.image"
+            :alt="data.image"
+            loading="eager"
+            decoding="async"
+            class="w-24 rounded object-contain"
+          />
         </template>
       </Column>
       <Column field="title" header="Title" />
       <Column field="link" header="Link">
         <template #body="{ data }">
-          <a class="underline underline-offset-2 text-indigo-800" :href="data.link" target="_blank" v-html="'Source'" />
+          <a
+            class="underline underline-offset-2 text-indigo-800"
+            :href="data.link"
+            target="_blank"
+            v-html="'Source'"
+          />
         </template>
       </Column>
       <Column field="" header="Writer">

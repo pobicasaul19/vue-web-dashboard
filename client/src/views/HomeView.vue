@@ -3,8 +3,6 @@ import { ref, onMounted } from 'vue'
 import ArticleService from '../services/ArticleService'
 import type { Article } from '../models/Article'
 
-const formatDate = (date: string | Date) => new Date(date).toLocaleDateString('en-GB')
-
 const articles = ref<Article[]>([])
 const loading = ref(true)
 const error = ref<string | null>(null)
@@ -15,7 +13,6 @@ const fetchArticles = async () => {
   loading.value = true
   try {
     const data = await ArticleService.getArticles()
-    console.log(data)
     articles.value = data
     isExpanded.value = data?.map(() => false)
   } catch (err) {
@@ -50,7 +47,13 @@ onMounted(() => {
   <div v-else class="flex flex-col sm:flex-row gap-5">
     <Card v-for="(article, i) in articles.slice(0, 2)" :key="i" class="w-full sm:w-[30rem]">
       <template #header>
-        <img :src="article.image" :alt="article.title" class="p-5 h-52 w-full object-contain" />
+        <img
+          :src="article.image"
+          :alt="article.title"
+          loading="eager"
+          decoding="async"
+          class="p-5 h-52 w-full object-contain"
+        />
       </template>
       <template #title>
         {{ article.title }} -
@@ -62,7 +65,7 @@ onMounted(() => {
       </template>
       <template #subtitle>
         <p class="flex flex-col capitalize">
-          <span>{{ formatDate(article.date) }}</span>
+          <span>{{ article.date }}</span>
           <span>Editor: {{ article.editor || 'No valid editor' }}</span>
           <span>Writer: {{ article.writer || 'No valid writer' }}</span>
         </p>
@@ -70,10 +73,7 @@ onMounted(() => {
       <template #content>
         <p class="m-0">
           {{ isExpanded[i] ? article.content : truncateContent(article.content) }}
-          <span
-            class="text-blue-300 cursor-pointer text-xs ml-1"
-            @click="toggleReadMore(i)"
-          >
+          <span class="text-blue-300 cursor-pointer text-xs ml-1" @click="toggleReadMore(i)">
             {{ isExpanded[i] ? 'Show less' : 'Read more' }}
           </span>
         </p>
