@@ -1,5 +1,6 @@
 const { loadCompanyCollection, loadArticleCollection } = require('../config/db');
-const { uuid, counter } = require('../utils')
+const { uuid, counter } = require('../utils');
+const moment = require('moment');
 
 // Get article lists
 const getArticles = async (req, res) => {
@@ -41,7 +42,7 @@ const createArticle = async (req, res) => {
       image: fileUrl,
       title,
       link,
-      date: date ? new Date(date) : new Date(),
+      date: date ? moment(date).format('DD/MM/YYYY') : moment(new Date()).format('DD/MM/YYYY'),
       content,
       status: status || 'For Edit',
       writer: writer || null,
@@ -87,7 +88,7 @@ const editArticle = async (req, res) => {
       image: fileUrl || articleCollection.data.articles[articleIndex].image,
       title,
       link,
-      date,
+      date: moment(date).format('DD/MM/YYYY'),
       content,
       status,
       writer,
