@@ -8,6 +8,7 @@ const swaggerInfo = require('./swagger');
 const useMiddleware = require('./middleware/authMiddleware');
 
 const path = require('path');
+const { logger } = require('./utils')
 
 const app = express();
 // Middelwares
@@ -22,7 +23,7 @@ app.use(express.json());
 app.use('/documentation', swaggerUi.serve, swaggerUi.setup(swaggerInfo));
 
 // Auth routes
-const login = require('./routes/api/auth/login');
+const login = require('./routes/api/auth');
 app.use('/api/auth/login', login);
 // Serve the assets folder
 app.use('/assets', express.static(path.join(__dirname, 'assets')));
@@ -54,4 +55,7 @@ app.use('/api/articles', updateArticle);
 
 // Start the server
 const port = 5000;
-app.listen(port, () => console.log(`Swagger running on http://localhost:${port}/documentation`));
+app.listen(port, async () => {
+  logger.info(`Server running on  http://localhost:${port}`)
+  logger.info(`Swagger running on http://localhost:${port}/documentation`)
+});

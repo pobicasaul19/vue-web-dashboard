@@ -3,8 +3,9 @@
   "version": "1.0.0",
   "main": "server.js",
   "scripts": {
+    "build": "webpack --config webpack.config.js",
     "test": "echo \"Error: no test specified\" && exit 1",
-    "start": "nodemon server.js"
+    "start": "nodemon server.js | npx pino-pretty"
   },
   "author": "Pobi Casaul",
   "license": "MIT",
@@ -21,12 +22,21 @@
     "multer": "^1.4.5-lts.1",
     "passport": "^0.7.0",
     "passport-jwt": "^4.0.1",
+    "pino": "^9.5.0",
     "serverless-http": "^3.2.0",
+    "steno": "^4.0.2",
     "swagger-jsdoc": "^6.2.8",
     "swagger-ui-express": "^5.0.1",
     "uuid": "^11.0.3"
   },
   "devDependencies": {
-    "nodemon": "^3.1.7"
+    "@babel/core": "^7.26.0",
+    "@babel/preset-env": "^7.26.0",
+    "babel-loader": "^9.2.1",
+    "node-polyfill-webpack-plugin": "^4.1.0",
+    "nodemon": "^3.1.7",
+    "pino-pretty": "^13.0.0",
+    "webpack": "^5.97.1",
+    "webpack-cli": "^5.1.4"
   }
 }
