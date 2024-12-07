@@ -12,7 +12,7 @@ const { logger } = require('./utils')
 
 const app = express();
 // Middelwares
-// app.use(cors());
+app.use(cors());
 // app.use(cors({
 //   origin: 'http://localhost:5173', // Adjust for your frontend
 //   credentials: true
