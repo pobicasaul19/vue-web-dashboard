@@ -1,5 +1,5 @@
 # Dashboard Site
- Develop a Dashboard Site that has the ablity to create, edit compnay, article, and publish an article related to a company.
+ Develop a Dashboard Site that can create, edit a  company, article, and publish an article related to a company.
 
 ## Features
 * Login to the app via username and password
