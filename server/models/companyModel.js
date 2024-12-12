@@ -1,25 +1,20 @@
-const mongoose = require('mongoose');
-
-const companySchema = mongoose.Schema(
-  {
-    logo: {
-      type: String,
-      required: [true, 'A logo URL is required.'],
-    },
-    name: {
-      type: String,
-      required: [true, 'A company name is required.'],
-      unique: true,
-    },
-    status: {
-      type: String,
-      enum: ['Active', 'Inactive'],
-      required: [true, 'A status is required.'],
-    },
+const companySchema = {
+  logo: {
+    type: File,
+    required: true,
+    message: 'A logo URL is required.'
   },
-  {
-    timestamps: true,
-  }
-);
+  name: {
+    type: String,
+    required: true,
+    message: 'A company name is required.'
+  },
+  status: {
+    type: String,
+    enum: ['Active', 'Inactive'],
+    required: true,
+    message: 'A status is required.'
+  },
+}
 
-module.exports = mongoose.model('Company', companySchema);
+module.exports = { companySchema };

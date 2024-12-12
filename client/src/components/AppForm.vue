@@ -9,27 +9,70 @@
           <p class="m-0">{{ items.label }}</p>
           <span>:</span>
         </div>
-        <div class="w-3/4 flex items-start">
+
+        <div class="w-3/4 flex flex-col items-start">
+          <component
+            :is="getInputComponent(items.type)"
+            v-model="formData[items.model]"
+            :options="items.options"
+            :class="{ capitalize: items.capitalize }"
+            :option-value="items.label === 'Company' ? 'name' : 'value'"
+            :rows="items.type === 'textarea' ? 5 : undefined"
+            :cols="items.type === 'textarea' ? 30 : undefined"
+            :min-date="items.type === 'calendar' ? new Date() : undefined"
+            :maxFileSize="1000000"
+            ref="file"
+            mode="basic"
+            name="file"
+            accept="image/*"
+            option-label="name"
+            class="w-full flex"
+            @select="onFileSelect"
+          />
+          <small v-if="errorValues[items.model]" class="text-red-500">{{
+            errorValues[items.model]
+          }}</small>
+        </div>
+
+        <div class="w-3/4 flex items-start" v-if="false">
           <template v-if="items.type === 'input'">
-            <InputText
-              v-model="formData[items.model]"
-              :class="{ capitalize: items.capitalize }"
-              class="w-full capitalize"
-            />
+            <div class="flex flex-col w-full">
+              <InputText
+                v-model="formData[items.model]"
+                :class="{ capitalize: items.capitalize }"
+                :invalid="errorValues[items.model]"
+                class="w-full capitalize"
+              />
+            </div>
           </template>
           <template v-if="items.type === 'textarea'">
-            <Textarea v-model="formData[items.model]" class="w-full" rows="5" cols="30" />
+            <div class="flex flex-col w-full">
+              <Textarea
+                v-model="formData[items.model]"
+                class="w-full"
+                rows="5"
+                cols="30"
+                :invalid="errorValues[items.model]"
+              />
+              <small v-if="errorValues[items.model]" class="text-red-500">{{
+                errorValues[items.model]
+              }}</small>
+            </div>
           </template>
           <template v-if="items.type === 'file'">
-            <FileUpload
-              ref="file"
-              mode="basic"
-              name="file"
-              accept="image/*"
-              :maxFileSize="1000000"
-              @select="onFileSelect"
-            />
-            <!-- <InputText v-model="formData[items.model]" class="w-full" rows="5" cols="30" v-else /> -->
+            <div class="flex flex-col items-start w-full">
+              <FileUpload
+                ref="file"
+                mode="basic"
+                name="file"
+                accept="image/*"
+                :maxFileSize="1000000"
+                @select="onFileSelect"
+              />
+              <small v-if="errorValues[items.model]" class="text-red-500">{{
+                errorValues[items.model]
+              }}</small>
+            </div>
           </template>
           <template v-if="items.type === 'calendar'">
             <DatePicker
@@ -43,20 +86,25 @@
             />
           </template>
           <template v-if="items.type === 'select'">
-            <Select
-              v-model="formData[items.model]"
-              :options="items.options"
-              :option-value="items.label === 'Company' ? 'name' : 'value'"
-              option-label="name"
-              appendTo="body"
-              class="w-full capitalize"
-            />
+            <div class="flex flex-col w-full">
+              <Select
+                v-model="formData[items.model]"
+                :options="items.options"
+                :option-value="items.label === 'Company' ? 'name' : 'value'"
+                option-label="name"
+                appendTo="body"
+                class="w-full capitalize"
+              />
+              <small v-if="errorValues[items.model]" class="text-red-500">{{
+                errorValues[items.model]
+              }}</small>
+            </div>
           </template>
         </div>
       </div>
       <div class="flex items-center justify-center space-x-5">
         <Button
-          @click.prevent='onSave'
+          @click.prevent="onSave"
           :loading="loading"
           type="submit"
           label="Save"
@@ -65,7 +113,7 @@
           class="!bg-[#0799c7] w-36 h-14 rounded-xl text-start !border-transparent"
         />
         <Button
-          @click.prevent='onPublish'
+          @click.prevent="onPublish"
           v-if="props.isPublish"
           :loading="isLoading"
           type="submit"
@@ -83,11 +131,13 @@
 import { ref, defineProps, watch, reactive } from 'vue'
 import { useToast } from 'primevue/usetoast'
 import { useAuthStore } from '../stores/useAuthStore'
-import { InputText } from 'primevue'
+import { DatePicker, FileUpload, InputText, Select, Textarea } from 'primevue'
+import { joinDataError } from '../utils'
 
 const props = defineProps<{
   onGetData: () => void
   formData: Record<string, any>
+  errorData: Record<string, any>
   itemFields: Array<{
     type: 'input' | 'select' | 'calendar' | 'textarea' | 'file'
     label: string
@@ -109,7 +159,24 @@ const emit = defineEmits(['close'])
 const showToast = useToast()
 const authStore = useAuthStore()
 
+const getInputComponent = (type: string) => {
+  const components = {
+    input: InputText,
+    file: FileUpload,
+    textarea: Textarea,
+    calendar: DatePicker,
+    select: Select
+  }
+
+  if (type in components) {
+    return components[type as keyof typeof components]
+  }
+
+  return InputText
+}
+
 const formData = reactive(props.formData)
+const errorValues = ref(props.errorData)
 const filePayload = ref<File | null>(null)
 const loading = ref(false)
 const isLoading = ref(false)
@@ -148,11 +215,14 @@ const onSave = async () => {
     props.onGetData()
     emit('close')
   } catch (error: any) {
-    console.log(error)
+    const err = error.response.data.data
+    Object.keys(err).forEach((key) => {
+      errorValues.value[key] = joinDataError(err, key)
+    })
     showToast.add({
       severity: 'error',
       summary: 'Error',
-      detail: error.response?.data?.message || error.message,
+      detail: error.response.data.metadata.message,
       life: 5000
     })
   } finally {
@@ -203,6 +273,14 @@ watch(
 .p-password {
   input {
     width: 100%;
+  }
+}
+.p-fileupload-basic {
+  width: 100%;
+  flex-wrap: nowrap !important;
+  span {
+    width: 100%;
+    word-break: break-all;
   }
 }
 </style>

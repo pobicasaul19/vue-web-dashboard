@@ -88,6 +88,14 @@ const itemFields = [
   }
 ]
 
+const errorFields = {
+  company: '',
+  image: '',
+  title: '',
+  link: '',
+  content: ''
+}
+
 onMounted(() => {
   onGetArticles()
 })
@@ -163,6 +171,7 @@ onMounted(() => {
       :onGetData="onGetArticles"
       :isPublish="true"
       :formData="articleForm"
+      :errorData="errorFields"
       :itemFields="itemFields"
       :create="ArticleService.addArticle"
       mode="create"
@@ -176,6 +185,7 @@ onMounted(() => {
       :onGetData="onGetArticles"
       :isPublish="true"
       :formData="articleForm"
+      :errorData="errorFields"
       :itemFields="itemFields"
       :update="ArticleService.updateArticle"
       :uuid="articleForm.uuid"

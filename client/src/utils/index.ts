@@ -27,3 +27,8 @@ export const status = [
     value: 'inactive'
   },
 ]
+
+export const joinDataError = (data: Record<string, any>, key: string) => {
+  const value = data[key];
+  return Array.isArray(value) ? value.join(', ') : value || '';
+};

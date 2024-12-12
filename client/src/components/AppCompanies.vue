@@ -1,6 +1,6 @@
 <script lang="ts" setup>
 import { reactive, ref } from 'vue'
-import { status } from '../utils/types'
+import { status } from '../utils'
 import CompanyService from '../services/CompanyService'
 import type { Company } from '../models/Company'
 

@@ -1,6 +1,8 @@
-const { loadCompanyCollection, loadArticleCollection } = require('../config/db');
-const { uuid, counter } = require('../utils');
 const moment = require('moment');
+const { uuid, counter } = require('../utils');
+const { validationMessage } = require('../utils/validationError')
+const { articleSchema } = require('../models/articleModel')
+const { loadCompanyCollection, loadArticleCollection } = require('../config/db');
 
 // Get article lists
 const getArticles = async (req, res) => {
@@ -21,24 +23,33 @@ const createArticle = async (req, res) => {
     const { company, title, link, date, content, status, writer, editor } = req.body;
     const file = req.file;
 
-    if (!file || !company || !title || !link || !content) {
-      return res.status(400).json({ message: 'Please provide all required fields: Company, Image, Title, Link and Content.' });
+    const fields = {
+      company,
+      file,
+      title,
+      link,
+      content
     }
 
-    // Validate URL format
-    const urlRegex = /^(https?|ftp):\/\/[^\s/$.?#].[^\s]*$/;
-    if (!urlRegex.test(link)) {
-      return res.status(400).json({ message: 'Invalid URL format' });
+    const errors = validationMessage(fields, articleSchema);
+    if (errors) {
+      return res.status(400).json({
+        data: errors,
+        metadata: {
+          message: 'Please provied all the required fields.'
+        }
+      });
     }
-    const fileUrl = `${req.protocol}://${req.get('host')}/assets/${file.filename}`;
+
+    const fileUrl = `${req.protocol}://${req.get('host')}/assets/${file?.filename}`;
     const companyCollection = await loadCompanyCollection();
     const selectedCompany = companyCollection.data.companies.find(t => t.name === company);
     const lastArticle = counter(articleCollection.data, 'articles');
-    const articleId = lastArticle ? lastArticle.id + 1 : 1
+
     const newArticle = {
       uuid,
-      id: articleId,
-      company: selectedCompany.name,
+      id: lastArticle ? lastArticle.id + 1 : 1,
+      company: selectedCompany?.name,
       image: fileUrl,
       title,
       link,
@@ -48,6 +59,7 @@ const createArticle = async (req, res) => {
       writer: writer || null,
       editor: editor || null,
     };
+
     articleCollection.data.articles.push(newArticle);
     await articleCollection.write();
     res.status(201).json({ message: 'Article created successfully' });
@@ -66,15 +78,24 @@ const editArticle = async (req, res) => {
     const { company, title, link, date, content, status, writer, editor } = req.body;
     const file = req.file;
 
-    if (!company || !title || !link || !content) {
-      return res.status(400).json({ message: 'Please provide all required fields: Company, Title, Link and Content.' });
-    }
-    // Validate URL format
-    const urlRegex = /^(https?|ftp):\/\/[^\s/$.?#].[^\s]*$/;
-    if (!urlRegex.test(link)) {
-      return res.status(400).json({ message: 'Invalid URL format' });
+    const fields = {
+      company,
+      file,
+      title,
+      link,
+      content
     }
 
+    const errors = validationMessage(fields, articleSchema);
+    if (errors) {
+      return res.status(400).json({
+        data: errors,
+        metadata: {
+          message: 'Please provied all the required fields.'
+        }
+      });
+    }
+    
     let fileUrl = null;
     if (file) {
       fileUrl = `${req.protocol}://${req.get('host')}/assets/${file.filename}`;

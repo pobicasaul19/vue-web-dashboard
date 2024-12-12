@@ -1,43 +1,35 @@
-const mongoose = require('mongoose');
-
-// Validation regex for URL format
 const urlRegex = /^(https?:\/\/)?([\w-]+\.)+[\w-]{2,4}(\/[^\s]*)?$/;
 
-const articleSchema = mongoose.Schema(
-  {
-    relatedCompany: {
-      type: mongoose.Schema.Types.ObjectId,
-      ref: 'Company',
-      required: [true, 'A related company is required.'],
-    },
-    image: {
-      type: String,
-      required: [true, 'An image URL is required.'],
-    },
-    title: {
-      type: String,
-      required: [true, 'A title is required.'],
-    },
-    link: {
-      type: String,
-      required: [true, 'A link is required.'],
-      validate: {
-        validator: (value) => urlRegex.test(value),
-        message: 'Invalid URL format.',
-      },
-    },
-    date: {
-      type: Date,
-      required: [true, 'A publication date is required.'],
-    },
-    content: {
-      type: String,
-      required: [true, 'Content is required.'],
+const articleSchema = {
+  company: {
+    ref: 'Company',
+    required: true,
+    message: 'A related company is required.'
+  },
+  image: {
+    type: File,
+    required: true,
+    message: 'Image file is requried.'
+  },
+  title: {
+    type: String,
+    required: true,
+    message: 'A title is required.'
+  },
+  link: {
+    type: String,
+    required: true,
+    message: 'A link is required.',
+    validate: {
+      regex: urlRegex,
+      message: 'Invalid URL format.',
     },
   },
-  {
-    timestamps: true,
-  }
-);
+  content: {
+    type: String,
+    required: true,
+    message: 'Content is required.'
+  },
+}
 
-module.exports = mongoose.model('Article', articleSchema);
+module.exports = { articleSchema }

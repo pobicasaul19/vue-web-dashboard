@@ -1,19 +1,6 @@
 {
   "articles": [
     {
-      "uuid": "522a445d-eba5-46b2-8b10-75bf922cf17d",
-      "id": 1,
-      "company": "Jenkins Inc.",
-      "image": "http://localhost:5000/assets/Jenkins-1.png",
-      "title": "What is Jenkins?",
-      "link": "https://www.geeksforgeeks.org/what-is-jenkins",
-      "date": "05/12/2024",
-      "content": "Jenkins is a tool that is used for automation. It is mainly an open-source server that allows all the developers to build, test and deploy software. It is written in Java and runs on java only. By using Jenkins we can make a continuous integration of projects(jobs) or end-to-endpoint automation",
-      "status": "For Edit",
-      "writer": "super admin",
-      "editor": "null"
-    },
-    {
       "uuid": "01ea7004-115d-497f-9302-ba65c47be6ea",
       "id": 2,
       "image": "http://localhost:5000/assets/Apple_logo_grey.png",
@@ -25,6 +12,19 @@
       "writer": "super admin",
       "editor": "super admin",
       "company": "Apple Inc."
+    },
+    {
+      "uuid": "522a445d-eba5-46b2-8b10-75bf922cf17d",
+      "id": 1,
+      "company": "Jenkins Inc.",
+      "image": "http://localhost:5000/assets/Jenkins-1.png",
+      "title": "What is Jenkins?",
+      "link": "https://www.geeksforgeeks.org/what-is-jenkins",
+      "date": "05/12/2024",
+      "content": "Jenkins is a tool that is used for automation. It is mainly an open-source server that allows all the developers to build, test and deploy software. It is written in Java and runs on java only. By using Jenkins we can make a continuous integration of projects(jobs) or end-to-endpoint automation",
+      "status": "For Edit",
+      "writer": "super admin",
+      "editor": "null"
     }
   ]
 }

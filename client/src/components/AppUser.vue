@@ -2,7 +2,7 @@
 import { reactive, ref, onMounted } from 'vue'
 import UserService from '../services/UserService'
 import type { User, UserPayload } from '../models/User'
-import { type, status } from '../utils/types'
+import { type, status } from '../utils'
 
 const userForm = reactive<Record<string, any>>({
   firstName: '',
@@ -42,6 +42,13 @@ const itemFields = [
     options: status
   }
 ]
+
+const errorFields = {
+  firstName: '',
+  lastName: '',
+  type: '',
+  status: ''
+}
 
 const editUser = ref(false)
 const createUser = ref(false)
@@ -97,6 +104,7 @@ onMounted(() => {
   <Dialog v-model:visible="createUser" modal header="Create New User" :style="{ width: '40rem' }">
     <AppForm
       :formData="userForm"
+      :errorData="errorFields"
       :itemFields="itemFields"
       :onGetData="onGetUsers"
       :create="UserService.addUser"
@@ -109,6 +117,7 @@ onMounted(() => {
   <Dialog v-model:visible="editUser" modal header="Update User" :style="{ width: '40rem' }">
     <AppForm
       :formData="userForm"
+      :errorData="errorFields"
       :itemFields="itemFields"
       :onGetData="onGetUsers"
       :update="UserService.updateUser"
