@@ -1,5 +1,5 @@
-const express = require('express');
-const { updateUser } = require('../../../controller/userController');
+import express from 'express';
+import { updateUser } from '../../../controller/userController.js';
 
 /**
  * @swagger
@@ -46,7 +46,6 @@ const { updateUser } = require('../../../controller/userController');
  *       400:
  *         description: Bad request
  */
-
 const router = express.Router();
 router.put('/:uuid', updateUser);
-module.exports = router;
+export default router

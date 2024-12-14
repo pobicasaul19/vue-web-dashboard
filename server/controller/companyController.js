@@ -1,11 +1,11 @@
-const { loadCompanyCollection } = require('../config/db');
-const { uuid, counter } = require('../utils')
+import { uuid, counter } from '../utils/index.js';
+import { loadCompanyCollection } from '../config/db.js';
 
 // Get company list
-const getCompany = async (req, res) => {
+export const getCompany = async (req, res) => {
   try {
     const companyCollection = await loadCompanyCollection();
-    const companies = companyCollection.data.companies
+    const companies = companyCollection.data.companies;
     res.status(200).json(companies);
   } catch (error) {
     res.status(500).json({ message: 'Server error' });
@@ -13,7 +13,7 @@ const getCompany = async (req, res) => {
 }
 
 // Create Company
-const createCompany = async (req, res) => {
+export const createCompany = async (req, res) => {
   try {
     const companyCollection = await loadCompanyCollection();
     const { name, status } = req.body;
@@ -47,7 +47,7 @@ const createCompany = async (req, res) => {
 };
 
 // Edit company
-const editCompany = async (req, res) => {
+export const editCompany = async (req, res) => {
   try {
     const companyCollection = await loadCompanyCollection();
     const { uuid } = req.params;
@@ -79,6 +79,3 @@ const editCompany = async (req, res) => {
     res.status(500).json({ message: 'Server error' });
   }
 };
-
-
-module.exports = { getCompany, createCompany, editCompany };

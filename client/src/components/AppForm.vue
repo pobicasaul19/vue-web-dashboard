@@ -33,74 +33,6 @@
             errorValues[items.model]
           }}</small>
         </div>
-
-        <div class="w-3/4 flex items-start" v-if="false">
-          <template v-if="items.type === 'input'">
-            <div class="flex flex-col w-full">
-              <InputText
-                v-model="formData[items.model]"
-                :class="{ capitalize: items.capitalize }"
-                :invalid="errorValues[items.model]"
-                class="w-full capitalize"
-              />
-            </div>
-          </template>
-          <template v-if="items.type === 'textarea'">
-            <div class="flex flex-col w-full">
-              <Textarea
-                v-model="formData[items.model]"
-                class="w-full"
-                rows="5"
-                cols="30"
-                :invalid="errorValues[items.model]"
-              />
-              <small v-if="errorValues[items.model]" class="text-red-500">{{
-                errorValues[items.model]
-              }}</small>
-            </div>
-          </template>
-          <template v-if="items.type === 'file'">
-            <div class="flex flex-col items-start w-full">
-              <FileUpload
-                ref="file"
-                mode="basic"
-                name="file"
-                accept="image/*"
-                :maxFileSize="1000000"
-                @select="onFileSelect"
-              />
-              <small v-if="errorValues[items.model]" class="text-red-500">{{
-                errorValues[items.model]
-              }}</small>
-            </div>
-          </template>
-          <template v-if="items.type === 'calendar'">
-            <DatePicker
-              v-model="formData[items.model]"
-              :minDate="new Date()"
-              showIcon
-              fluid
-              showButtonBar
-              iconDisplay="input"
-              class="w-full"
-            />
-          </template>
-          <template v-if="items.type === 'select'">
-            <div class="flex flex-col w-full">
-              <Select
-                v-model="formData[items.model]"
-                :options="items.options"
-                :option-value="items.label === 'Company' ? 'name' : 'value'"
-                option-label="name"
-                appendTo="body"
-                class="w-full capitalize"
-              />
-              <small v-if="errorValues[items.model]" class="text-red-500">{{
-                errorValues[items.model]
-              }}</small>
-            </div>
-          </template>
-        </div>
       </div>
       <div class="flex items-center justify-center space-x-5">
         <Button
@@ -167,23 +99,20 @@ const getInputComponent = (type: string) => {
     calendar: DatePicker,
     select: Select
   }
-
   if (type in components) {
     return components[type as keyof typeof components]
   }
-
   return InputText
 }
 
 const formData = reactive(props.formData)
-const errorValues = ref(props.errorData)
+const errorValues = reactive(props.errorData)
 const filePayload = ref<File | null>(null)
 const loading = ref(false)
 const isLoading = ref(false)
 const onFileSelect = (event: { files: File[] }) => {
-  filePayload.value = event.files[0]
+  filePayload.value = event.files?.[0]
 }
-
 // Save or Update function
 const saveOrUpdate = async () => {
   const payload: Record<string, any> = { ...formData }
@@ -205,6 +134,9 @@ const saveOrUpdate = async () => {
 const onSave = async () => {
   loading.value = true
   try {
+    Object.keys(errorValues).forEach((key) => {
+      errorValues[key] = null
+    });
     await saveOrUpdate()
     showToast.add({
       severity: 'success',
@@ -213,11 +145,12 @@ const onSave = async () => {
       life: 3000
     })
     props.onGetData()
-    emit('close')
+    emit('close');
   } catch (error: any) {
+    console.log(error)
     const err = error.response.data.data
     Object.keys(err).forEach((key) => {
-      errorValues.value[key] = joinDataError(err, key)
+      errorValues[key] = joinDataError(err, key)
     })
     showToast.add({
       severity: 'error',

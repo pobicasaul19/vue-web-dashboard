@@ -44,6 +44,7 @@ onMounted(() => {
     <p class="text-red-600">{{ error }}</p>
   </div>
 
+
   <div v-else class="flex flex-col sm:flex-row gap-5">
     <Card v-for="(article, i) in articles.slice(0, 2)" :key="i" class="w-full sm:w-[30rem]">
       <template #header>

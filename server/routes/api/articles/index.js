@@ -1,6 +1,5 @@
-const express = require('express');
-const { getArticles } = require('../../../controller/articleController');
-
+import express from 'express';
+import { getArticles } from '../../../controller/articleController.js';
 /**
  * @swagger
  * /api/articles:
@@ -14,7 +13,6 @@ const { getArticles } = require('../../../controller/articleController');
  *       400:
  *         description: Bad request
  */
-
 const router = express.Router();
 router.get('/', getArticles);
-module.exports = router;
+export default router;

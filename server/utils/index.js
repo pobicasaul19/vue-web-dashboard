@@ -1,10 +1,9 @@
-const { v4: uuidv4 } = require('uuid');
-const pino = require('pino')
+import { v4 as uuidv4 } from 'uuid';
+import pino from 'pino';
 
-const uuid = uuidv4();
-const counter = (data, key) => {
+export const uuid = uuidv4();
+export const counter = (data, key) => {
   return data[key].sort((a, b) => b.id - a.id)[0];
 }
-const logger = pino();
+export const logger = pino();
 
-module.exports = { uuid, counter, logger };

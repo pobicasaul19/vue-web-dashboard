@@ -11,10 +11,9 @@ const companySchema = {
   },
   status: {
     type: String,
-    enum: ['Active', 'Inactive'],
     required: true,
-    message: 'A status is required.'
+    message: 'Please specify the status (Active or Inactive)',
   },
 }
 
-module.exports = { companySchema };
+export default companySchema;

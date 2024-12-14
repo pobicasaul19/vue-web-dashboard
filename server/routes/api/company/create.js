@@ -1,7 +1,6 @@
-const express = require('express');
-const { createCompany } = require('../../../controller/companyController');
-const { upload } = require('../../../middleware/multerMiddleware');
-
+import express from 'express';
+import { upload } from '../../../middleware/multerMiddleware.js';
+import { createCompany } from '../../../controller/companyController.js';
 /**
  * @swagger
  * /api/companies/create:
@@ -37,8 +36,6 @@ const { upload } = require('../../../middleware/multerMiddleware');
  *       400:
  *         description: Bad request
  */
-
-
 const router = express.Router();
 router.post('/create', upload.single('file'), createCompany);
-module.exports = router;
+export default router;

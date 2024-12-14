@@ -1,14 +1,16 @@
-const path = require('path');
-const fs = require('fs');
+import path from 'path';
+import fs from 'fs';
+import { fileURLToPath } from 'url';
 
 // Ensure the data folder exists
-const dataFolder = path.resolve(__dirname, './data');
+const dir = path.dirname(fileURLToPath(import.meta.url))
+const dataFolder = path.resolve(dir, './data');
 if (!fs.existsSync(dataFolder)) {
   fs.mkdirSync(dataFolder, { recursive: true });
 }
 
 // Helper function to initialize a Lowdb database
-async function InitializeDatabase(fileName) {
+const initializeDatabase = async (fileName) => {
   const { Low } = await import('lowdb');
   const { JSONFile } = await import('lowdb/node');
 
@@ -20,7 +22,7 @@ async function InitializeDatabase(fileName) {
   try {
     await db.read();
     if (!db.data || Object.keys(db.data).length === 0) {
-      db.data = { [fileName]: [] }; // Set default structure
+      db.data = { [fileName]: [] };
     }
     await db.write();
   } catch (error) {
@@ -31,23 +33,17 @@ async function InitializeDatabase(fileName) {
 }
 
 // Predefined collection loaders for common collections
-const loadUserCollection = async () => {
-  const db = await InitializeDatabase('users');
+export const loadUserCollection = async () => {
+  const db = await initializeDatabase('users');
   return db;
 };
 
-const loadCompanyCollection = async () => {
-  const db = await InitializeDatabase('companies');
+export const loadCompanyCollection = async () => {
+  const db = await initializeDatabase('companies');
   return db;
 };
 
-const loadArticleCollection = async () => {
-  const db = await InitializeDatabase('articles');
+export const loadArticleCollection = async () => {
+  const db = await initializeDatabase('articles');
   return db;
-};
-
-module.exports = {
-  loadUserCollection,
-  loadCompanyCollection,
-  loadArticleCollection,
 };

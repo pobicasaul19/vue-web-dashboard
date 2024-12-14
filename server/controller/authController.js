@@ -1,36 +1,35 @@
-const bcrypt = require('bcryptjs');
-const jwt = require('jsonwebtoken');
-const { loadUserCollection } = require('../config/db');
+import jwt from 'jsonwebtoken';
+import authSchema from '../models/authModel.js';
+import { loadUserCollection } from '../config/db.js'
+import validationMessage from '../utils/validationError.js';
 
 // Generate access token
-const generateAccessToken = (userId) => {
-  return jwt.sign({ id: userId }, 'appTokenKey', { expiresIn: '12h' });
+const generateAccessToken = (uuid) => {
+  return jwt.sign({ uuid }, 'appTokenKey', { expiresIn: '12h' });
 };
 
 // Login user
-const login = async (req, res) => {
+export const login = async (req, res) => {
   try {
     const usersCollection = await loadUserCollection();
     const { userName, password } = req.body;
 
-    // Validate input
-    if (!userName || !password) {
-      return res.status(400).json({ message: 'Please enter all fields.' });
+    const field = { userName, password }
+    const context = { usersCollection, userName }
+    const errors = await validationMessage(field, authSchema, context)
+    if (errors) {
+      return res.status(400).json({
+        data: errors,
+        metadata: {
+          message: 'Authentication failed. Please check your credentials.'
+        }
+      })
     }
-    // Find user by userName
-    const user = usersCollection.data.users.find(user => user.userName === userName)
-    if (!user) {
-      return res.status(404).json({ message: 'User does not exist.' });
-    }
-    // Compare passwords
-    const isPasswordValid = await bcrypt.compare(password, user.password);
-    if (!isPasswordValid) {
-      return res.status(401).json({ message: 'Invalid credentials.' });
-    }
-    // Generate token
-    const accessToken = generateAccessToken(user._id);
-    // Exclude password from response
+
+    const user = usersCollection.data.users.find(user => user.userName === userName);
+    const accessToken = generateAccessToken(user.uuid);
     const { password: _, ...userWithoutPassword } = user;
+
 
     res.status(200).json({
       data: { user: userWithoutPassword, token: accessToken },
@@ -41,6 +40,3 @@ const login = async (req, res) => {
     res.status(500).json({ message: 'Server error' });
   }
 };
-
-
-module.exports = { login };

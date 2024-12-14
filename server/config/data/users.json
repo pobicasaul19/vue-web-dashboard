@@ -7,7 +7,7 @@
       "lastName": "admin",
       "userName": "editoradmin",
       "type": "editor",
-      "status": "active"
+      "status": "inactive"
     },
     {
       "uuid": "51508ada-6d59-4230-b2ba-1e38dbe4819f",
@@ -16,7 +16,7 @@
       "lastName": "Admin",
       "userName": "useradmin",
       "type": "user",
-      "status": "active"
+      "status": "inactive"
     },
     {
       "uuid": "fa47e38e-f1e9-445d-9f5a-205a0e59f04e",
@@ -35,7 +35,7 @@
       "lastName": "Admin",
       "userName": "writeradmin",
       "type": "writer",
-      "status": "active"
+      "status": "inactive"
     }
   ]
 }

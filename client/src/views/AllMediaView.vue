@@ -22,7 +22,7 @@ const onGetCompanies = async () => {
   } finally {
     loading.value = false
   }
-}
+};
 
 onMounted(() => {
   onGetCompanies()

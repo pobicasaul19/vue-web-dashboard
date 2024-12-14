@@ -2,25 +2,30 @@ const userSchema = {
   firstName: {
     type: String,
     required: true,
-    message: 'Please add your first name',
+    message: 'Please add your firstname',
+    validate: {
+      custom: (value, { usersCollection }) => {
+        const userInfo = usersCollection.data.users.some(user => user.firstName === value);
+        console.log(userInfo ? { valid: false, message: 'Firstname is taken.' } : { valid: true })
+        return userInfo ? { valid: false, message: 'Firstname is taken.' } : { valid: true };
+      },
+    },
   },
   lastName: {
     type: String,
     required: true,
-    message: 'Please add your last name'
+    message: 'Please add your lastname'
   },
   type: {
     type: String,
-    enum: ['Writer', 'Editor'],
     required: true,
-    message: 'Please specify the type (Writer or Editor)'
+    message: 'Please select the type.'
   },
   status: {
     type: String,
-    enum: ['Active', 'Inactive'],
     required: true,
     message: 'Please specify the status (Active or Inactive)',
   },
 }
 
-module.exports = { userSchema }
+export default userSchema;

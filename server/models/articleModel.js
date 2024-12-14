@@ -32,4 +32,4 @@ const articleSchema = {
   },
 }
 
-module.exports = { articleSchema }
+export default articleSchema

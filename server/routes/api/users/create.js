@@ -1,6 +1,5 @@
-const express = require('express');
-const { createUser } = require('../../../controller/userController');
-
+import express from 'express';
+import { createUser } from '../../../controller/userController.js';
 /**
  * @swagger
  * /api/users/create:
@@ -46,7 +45,6 @@ const { createUser } = require('../../../controller/userController');
  *       400:
  *         description: Bad request
  */
-
 const router = express.Router();
 router.post('/create', createUser);
-module.exports = router;
+export default router;

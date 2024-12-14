@@ -6,12 +6,17 @@ import { useToast } from 'primevue/usetoast'
 import LoginService from '../services/LoginService'
 import type { loginData } from '../models/Authentication'
 import type { User } from '../models/User'
+import { joinDataError } from '../utils'
 
 const router = useRouter()
 const authStore = useAuthStore()
 const toast = useToast()
 
 const form = ref<loginData>({
+  userName: '',
+  password: ''
+})
+const errorValue = ref<loginData>({
   userName: '',
   password: ''
 })
@@ -41,13 +46,12 @@ const login = async () => {
     const response = await LoginService.validateLogin(form.value)
     handleSuccess(response)
   } catch (error: any) {
-    console.log(error)
-    toast.add({
-      severity: 'error',
-      summary: 'Login Failed',
-      detail: error.response?.data?.message,
-      life: 3000
-    })
+    const err = error.response.data.data
+    const errors = {
+      userName: joinDataError(err, 'userName'),
+      password: joinDataError(err, 'password')
+    }
+    errorValue.value = { ...errors }
   } finally {
     loading.value = false
   }
@@ -57,22 +61,29 @@ const login = async () => {
 <template>
   <app-mode />
   <div class="flex flex-col items-center justify-center w-full h-screen">
-    <form @submit.prevent="login" class="border p-10 rounded-lg shadow-sm space-y-6">
-      <FloatLabel>
-        <InputText id="username" type="name" v-model="form.userName" class="mt-1 block w-full" />
-        <label class="block" for="username">Username</label>
-      </FloatLabel>
-      <FloatLabel class="w-full">
+    <form @submit.prevent="login" class="border p-10 rounded-lg shadow-sm space-y-6 w-96">
+      <div class="w-full">
+        <InputText
+          id="username"
+          type="name"
+          placeholder="Username"
+          v-model="form.userName"
+          class="w-full"
+        />
+        <small v-if="errorValue.userName" class="text-red-600">{{ errorValue.userName }}</small>
+      </div>
+      <div class="w-full">
         <Password
           id="password"
           type="password"
           v-model="form.password"
           toggleMask
           class="w-full"
+          placeholder="Password"
           :feedback="false"
         />
-        <label for="password">Password</label>
-      </FloatLabel>
+        <small v-if="errorValue.password" class="text-red-600">{{ errorValue.password }}</small>
+      </div>
       <div class="flex items-center justify-center">
         <Button
           type="submit"

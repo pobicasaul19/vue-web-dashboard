@@ -1,6 +1,5 @@
-const express = require('express');
-const { getUsers } = require('../../../controller/userController');
-
+import express from 'express';
+import { getUsers } from '../../../controller/userController.js';
 /**
  * @swagger
  * /api/users:
@@ -14,7 +13,6 @@ const { getUsers } = require('../../../controller/userController');
  *       400:
  *         description: Bad request
  */
-
 const router = express.Router();
 router.get('/', getUsers);
-module.exports = router;
+export default router;

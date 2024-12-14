@@ -1,5 +1,5 @@
-const express = require('express');
-const { login } = require('../../../controller/authController.js');
+import express from 'express';
+import { login } from '../../../controller/authController.js';
 /**
  * @swagger
  * /api/auth/login:
@@ -29,4 +29,4 @@ const { login } = require('../../../controller/authController.js');
  */
 const router = express.Router();
 router.post('/', login);
-module.exports = router;
+export default router;

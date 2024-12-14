@@ -1,7 +1,6 @@
-const express = require('express');
-const { createArticle } = require('../../../controller/articleController');
-const { upload } = require('../../../middleware/multerMiddleware');
-
+import express from 'express';
+import { createArticle } from '../../../controller/articleController.js';
+import { upload } from '../../../middleware/multerMiddleware.js';
 /**
  * @swagger
  * /api/articles/create:
@@ -55,7 +54,6 @@ const { upload } = require('../../../middleware/multerMiddleware');
  *       400:
  *         description: Bad request
  */
-
 const router = express.Router();
 router.post('/create', upload.single('file'), createArticle);
-module.exports = router;
+export default router;

@@ -1,7 +1,6 @@
-const express = require('express');
-const { editCompany } = require('../../../controller/companyController');
-const { upload } = require('../../../middleware/multerMiddleware');
-
+import { editCompany } from '../../../controller/companyController.js';
+import { upload } from '../../../middleware/multerMiddleware.js';
+import express from 'express';
 /**
  * @swagger
  * /api/companies/{uuid}:
@@ -36,7 +35,7 @@ const { upload } = require('../../../middleware/multerMiddleware');
  *       400:
  *         description: Bad request
  */
-
 const router = express.Router();
 router.put('/:uuid', upload.single('file'), editCompany);
-module.exports = router;
+export default router
+

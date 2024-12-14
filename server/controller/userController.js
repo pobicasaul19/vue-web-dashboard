@@ -1,9 +1,11 @@
-const bcrypt = require('bcryptjs')
-const { loadUserCollection } = require('../config/db');
-const { uuid, counter } = require('../utils')
+import bcrypt from 'bcryptjs';
+import { uuid, counter } from '../utils/index.js';
+import { loadUserCollection } from '../config/db.js';
+import validationMessage from '../utils/validationError.js';
+import userSchema from '../models/userModels.js';
 
 // Get user list
-const getUsers = async (req, res) => {
+export const getUsers = async (req, res) => {
   try {
     const usersCollection = await loadUserCollection();
     const users = usersCollection.data.users;
@@ -12,21 +14,28 @@ const getUsers = async (req, res) => {
       .sort((a, b) => a.id - b.id);
     res.status(200).json(sortedUsers);
   } catch (error) {
-    console.error(error);
-    res.status(500).json({ message: 'Failed to retrieve users.' });
+    res.status(500).json({ message: 'Server error' });
   }
 };
 
 
 // Create user
-const createUser = async (req, res) => {
+export const createUser = async (req, res) => {
   try {
     const usersCollection = await loadUserCollection();
     const { firstName, lastName, type, status, password } = req.body;
 
-    // Validate required fields
-    if (!firstName || !lastName || !type || !status) {
-      return res.status(400).json({ message: 'Please enter all fields.' });
+    const field = { firstName, lastName, type, status };
+    const context = { usersCollection };
+    const errors = await validationMessage(field, userSchema, context);
+
+    if (errors) {
+      return res.status(400).json({
+        data: errors,
+        metadata: {
+          message: 'Failed to create new user.'
+        }
+      })
     }
 
     // Check if the user already exists
@@ -66,7 +75,7 @@ const createUser = async (req, res) => {
 };
 
 // Update user
-const updateUser = async (req, res) => {
+export const updateUser = async (req, res) => {
   try {
     const usersCollection = await loadUserCollection();
     const { uuid } = req.params;
@@ -100,5 +109,3 @@ const updateUser = async (req, res) => {
     res.status(500).json({ message: 'Server error while updating user.' });
   }
 };
-
-module.exports = { getUsers, createUser, updateUser };

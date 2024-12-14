@@ -1,11 +1,11 @@
-const moment = require('moment');
-const { uuid, counter } = require('../utils');
-const { validationMessage } = require('../utils/validationError')
-const { articleSchema } = require('../models/articleModel')
-const { loadCompanyCollection, loadArticleCollection } = require('../config/db');
+import moment from 'moment';
+import { uuid, counter } from '../utils/index.js';
+import validationMessage from '../utils/validationError.js';
+import articleSchema from '../models/articleModel.js';
+import { loadArticleCollection } from '../config/db.js';
 
 // Get article lists
-const getArticles = async (req, res) => {
+export const getArticles = async (req, res) => {
   try {
     const articleCollection = await loadArticleCollection();
     const article = articleCollection.data.articles
@@ -95,7 +95,7 @@ const editArticle = async (req, res) => {
         }
       });
     }
-    
+
     let fileUrl = null;
     if (file) {
       fileUrl = `${req.protocol}://${req.get('host')}/assets/${file.filename}`;
@@ -125,6 +125,3 @@ const editArticle = async (req, res) => {
     res.status(500).json({ message: 'Server error' });
   }
 };
-
-
-module.exports = { getArticles, createArticle, editArticle }

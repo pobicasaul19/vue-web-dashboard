@@ -1,4 +1,4 @@
-const validateField = (field, value, schema) => {
+const validateField = async (field, value, schema, context) => {
   const schemaField = schema[field];
 
   if (!schemaField) {
@@ -7,21 +7,32 @@ const validateField = (field, value, schema) => {
 
   const { required, message, validate } = schemaField;
 
-  return required && !value
-    ? message
-    : validate?.regex && !validate.regex.test(value)
-      ? validate.message
-      : null
+  if (required && !value) return message;
+
+  if (validate.custom) {
+    const validationResponse = await validate.custom(value, context);
+    if (validationResponse) {
+      return validationResponse.message;
+    }
+  };
+
+  if (validate.regex && !validate.regex.test(value)) return validate.message;
+
+  return null;
 };
 
-const validationMessage = (data, schema) => {
+const validationMessage = async (data, schema, context) => {
   const errors = {};
-  Object.keys(schema).forEach((field) => {
-    const message = validateField(field, data[field], schema);
-    message ? errors[field] = message : null;
-  });
+  await Promise.allSettled(
+    Object.keys(schema).map(async (field) => {
+      const message = await validateField(field, data[field], schema, context);
+      if (message) {
+        errors[field] = message
+      }
+    })
+  )
 
-  return errors;
+  return Object.keys(errors).length > 0 ? errors : null;
 };
 
-module.exports = { validationMessage };
+export default validationMessage;
