@@ -1,6 +1,6 @@
 <script setup>
-import { useLayout } from '@/layout/layout';
-const { toggleDarkMode, isDarkTheme } = useLayout();
+import { useLayout } from '@/layout/layout'
+const { toggleDarkMode, isDarkTheme } = useLayout()
 </script>
 
 <template>

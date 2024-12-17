@@ -13,9 +13,13 @@ const toggleColorScheme = () => {
 
 <template>
   <header>
-    <ToggleSwitch @change="toggleColorScheme" v-model="darkMode" :pt="{
-      slider: 'my-toggle-slider',
-    }" />
+    <ToggleSwitch
+      @change="toggleColorScheme"
+      v-model="darkMode"
+      :pt="{
+        slider: 'my-toggle-slider'
+      }"
+    />
   </header>
 </template>
 

@@ -14,8 +14,8 @@ export const type = [
   {
     name: 'Writer',
     value: 'writer'
-  },
-];
+  }
+]
 
 export const status = [
   {
@@ -25,10 +25,10 @@ export const status = [
   {
     name: 'Inactive',
     value: 'inactive'
-  },
+  }
 ]
 
 export const joinDataError = (data: Record<string, any>, key: string) => {
-  const value = data[key];
-  return Array.isArray(value) ? value.join(', ') : value || '';
-};
+  const value = data[key]
+  return Array.isArray(value) ? value.join(', ') : value || ''
+}

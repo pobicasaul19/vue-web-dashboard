@@ -1,4 +1,4 @@
-<script setup lang='ts'>
+<script setup lang="ts">
 import { ref } from 'vue'
 import { useRouter } from 'vue-router'
 import { useAuthStore } from '../stores/useAuthStore'
@@ -103,7 +103,7 @@ const login = async () => {
   </div>
 </template>
 
-<style lang='scss'>
+<style lang="scss">
 .p-password {
   input {
     width: 100%;

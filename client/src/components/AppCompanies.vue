@@ -116,8 +116,7 @@ const onClickOpenCreate = () => {
   </Dialog>
 </template>
 
-
-<style lang='scss'>
+<style lang="scss">
 .p-image {
   img {
     width: 100%;

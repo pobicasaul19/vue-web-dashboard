@@ -1,4 +1,4 @@
- <template>
+<template>
   <form class="space-y-10" enctype="multipart/form-data">
     <div class="flex flex-col gap-5 w-full">
       <div v-for="(items, i) in itemFields" :key="i" class="flex">
@@ -109,7 +109,8 @@ const errorValues = reactive(props.errorData)
 const filePayload = ref<File | null>(null)
 const loading = ref(false)
 const isLoading = ref(false)
-const onFileSelect = (event: { files: File[] }) => {
+const onFileSelect = (...arg: unknown[]) => {
+  const event = arg[0] as { files: File[] }
   filePayload.value = event.files?.[0]
 }
 // Save or Update function
@@ -124,7 +125,6 @@ const saveOrUpdate = async () => {
     payload.file = filePayload.value
     publishPayload.file = filePayload.value
   }
-  console.log(payload)
   props.mode === 'create'
     ? await props.create(props.isPublish ? publishPayload : payload)
     : await props.update(props.isPublish ? publishPayload : payload, props.uuid)
@@ -144,10 +144,9 @@ const onSave = async () => {
       detail: `${props.name} was ${props.mode === 'edit' ? 'updated' : 'created'} successfully.`,
       life: 3000
     })
-    emit('close');
+    emit('close')
     props.onGetData()
   } catch (error: any) {
-    console.log(error)
     const err = error.response.data.data
     Object?.keys(err).forEach((key) => {
       errorValues[key] = joinDataError(err, key)
@@ -217,4 +216,3 @@ watch(
   }
 }
 </style>
-

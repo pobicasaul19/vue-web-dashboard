@@ -1,20 +1,20 @@
-import { type InternalAxiosRequestConfig, type AxiosRequestHeaders, } from 'axios'
-import { useAuthStore } from "@/stores/useAuthStore";
+import { type InternalAxiosRequestConfig, type AxiosRequestHeaders } from 'axios'
+import { useAuthStore } from '@/stores/useAuthStore'
 
-const authStore = useAuthStore();
+const authStore = useAuthStore()
 const axiosConfig = {
-  baseURL: 'http://localhost:5000/api/',
+  baseURL: 'http://localhost:5000/api/'
   // baseURL: 'https://web-portal-production-f18a.up.railway.app/'
-};
+}
 
 // Token injector function to dynamically get the token
 const tokenInjector = (config: InternalAxiosRequestConfig): InternalAxiosRequestConfig => {
-  const token = authStore.token;
-  config.headers = config.headers || {} as AxiosRequestHeaders;
+  const token = authStore.token
+  config.headers = config.headers || ({} as AxiosRequestHeaders)
   if (token) {
-    (config.headers as AxiosRequestHeaders)['Authorization'] = `Bearer ${token}`;
+    ;(config.headers as AxiosRequestHeaders)['Authorization'] = `Bearer ${token}`
   }
-  return config;
-};
+  return config
+}
 
-export { axiosConfig, tokenInjector };
+export { axiosConfig, tokenInjector }

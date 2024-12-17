@@ -22,7 +22,7 @@ const onGetCompanies = async () => {
   } finally {
     loading.value = false
   }
-};
+}
 
 onMounted(() => {
   onGetCompanies()
@@ -48,5 +48,4 @@ onMounted(() => {
   </div>
 </template>
 
-<style>
-</style>
+<style></style>

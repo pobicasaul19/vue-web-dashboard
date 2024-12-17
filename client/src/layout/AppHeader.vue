@@ -1,4 +1,4 @@
-<script setup lang='ts'>
+<script setup lang="ts">
 import router from '../router'
 import { useLayout } from './layout'
 import { useAuthStore } from '../stores/useAuthStore'
