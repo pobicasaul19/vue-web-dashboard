@@ -1,3 +1,4 @@
+import { upload } from '../middleware/multerMiddleware.js';
 const urlRegex = /^(https?:\/\/)?([\w-]+\.)+[\w-]{2,4}(\/[^\s]*)?$/;
 
 const articleSchema = {
@@ -7,7 +8,7 @@ const articleSchema = {
     message: 'A related company is required.'
   },
   file: {
-    type: File,
+    type: upload.single('file'),
     required: true,
     message: 'Image file is requried.'
   },

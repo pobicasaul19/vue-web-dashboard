@@ -54,7 +54,7 @@ export const createArticle = async (req, res) => {
       image: fileUrl,
       title,
       link,
-      date: date ? moment(date).format('DD/MM/YYYY') : moment(new Date()).format('DD/MM/YYYY'),
+      date: date ? moment(date).format('MM/DD/YYYY') : moment(new Date()).format('MM/DD/YYYY'),
       content,
       status: status ?? 'For Edit',
       writer: writer ?? null,
@@ -110,11 +110,11 @@ export const editArticle = async (req, res) => {
       image: fileUrl || articleCollection.data.articles[articleIndex].image,
       title,
       link,
-      date: moment(date).format('DD/MM/YYYY'),
+      date: moment(date).format('MM/DD/YYYY'),
       content,
       status,
-      writer,
-      editor
+      writer: writer ?? null,
+      editor: editor ?? null
     }
     await articleCollection.write();
     res.status(200).json({

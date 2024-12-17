@@ -2,6 +2,7 @@ import path from 'path';
 import express from 'express';
 import bodyParser from 'body-parser';
 import cors from 'cors';
+import { corsOptions } from './config/corsOptions.js';
 import cookieParser from 'cookie-parser';
 
 import swaggerUi from 'swagger-ui-express';
@@ -13,7 +14,7 @@ import { fileURLToPath } from 'url';
 const app = express();
 
 // Middelwares
-app.use(cors());
+app.use(cors(corsOptions));
 
 app.use(cookieParser());
 app.use(bodyParser.urlencoded({ extended: true }));
