@@ -1,3 +1,4 @@
+import 'dotenv/config'
 import path from 'path';
 import express from 'express';
 import bodyParser from 'body-parser';
@@ -8,17 +9,19 @@ import cookieParser from 'cookie-parser';
 import swaggerUi from 'swagger-ui-express';
 import swaggerInfo from './swagger.js';
 import authMiddleware from './middleware/authMiddleware.js';
+import { credentials } from './middleware/credentials.js';
 import { logger } from './utils/index.js';
 import { fileURLToPath } from 'url';
 
 const app = express();
 
 // Middelwares
+app.use(credentials);
 app.use(cors(corsOptions));
 app.use(cookieParser());
-app.use(bodyParser.urlencoded({ extended: true }));
-app.use(bodyParser.json({ extended: true }));
-app.use(express.urlencoded({ extended: true }));
+app.use(bodyParser.urlencoded());
+app.use(bodyParser.json());
+app.use(express.urlencoded({ extended: false }));
 app.use(express.json());
 
 // Swagger UI
