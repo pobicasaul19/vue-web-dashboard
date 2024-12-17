@@ -1,14 +1,11 @@
-// const swaggerJSDoc = require('swagger-jsdoc');
-// const { version } = require('./package.json')
 import swaggerJSDoc from 'swagger-jsdoc';
-import packageJson from './package.json' with { type: 'json' }
 
 const swaggerOptions = {
   definition: {
     openapi: '3.0.0',
     info: {
       title: 'Writer/Editor Dashboard Site API Documentation',
-      version: packageJson.version,
+      version: '1.0.0',
       description: 'Automatically generated API documentation.',
     },
     components: {

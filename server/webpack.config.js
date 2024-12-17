@@ -1,8 +1,8 @@
-const path = require('path');
-const NodePolyfillPlugin = require('node-polyfill-webpack-plugin');
-const webpack = require('webpack');
+import path from 'path';
+import NodePolyfillPlugin from 'node-polyfill-webpack-plugin';
+import webpack from 'webpack';
 
-module.exports = {
+export default {
   devtool: 'source-map',
   target: 'node',
   mode: 'production',
@@ -13,7 +13,7 @@ module.exports = {
     'swagger-jsdoc': 'commonjs swagger-jsdoc',
   },
   output: {
-    path: path.resolve(__dirname, 'dist'),
+    path: path.resolve('dist'),
     filename: 'bundle.js',
   },
   stats: {
@@ -32,16 +32,24 @@ module.exports = {
           loader: 'babel-loader',
         },
       },
+      {
+        test: /\.json$/,
+        type: 'json',
+      },
     ],
   },
   resolve: {
     extensions: ['.js'],
     fallback: {
-      url: require.resolve('url'),
+      url: 'url',
+      buffer: 'buffer',
     },
   },
   plugins: [
     new NodePolyfillPlugin(),
+    new webpack.ProvidePlugin({
+      Buffer: ['buffer', 'Buffer'],
+    }),
     new webpack.IgnorePlugin({
       resourceRegExp: /swagger-jsdoc\/src\/utils/,
     }),
