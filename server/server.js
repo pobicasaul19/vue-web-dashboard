@@ -19,8 +19,8 @@ const app = express();
 app.use(credentials);
 app.use(cors(corsOptions));
 app.use(cookieParser());
-app.use(bodyParser.urlencoded());
-app.use(bodyParser.json());
+app.use(bodyParser.urlencoded({ extended: true }));
+app.use(bodyParser.json({ extended: true }));
 app.use(express.urlencoded({ extended: false }));
 app.use(express.json());
 
