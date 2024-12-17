@@ -2,7 +2,7 @@
 import { reactive, ref } from 'vue'
 import { status } from '../utils'
 import CompanyService from '../services/CompanyService'
-import type { Company } from '../models/Company'
+import type { Company, CompanyPayload } from '../models/Company'
 
 const props = defineProps<{
   onGetCompany: () => void
@@ -19,7 +19,7 @@ const itemFields = [
   {
     type: 'file',
     label: 'Logo',
-    model: 'logo'
+    model: 'file'
   },
   {
     type: 'input',
@@ -33,15 +33,18 @@ const itemFields = [
     options: status
   }
 ]
+const errorFields = {
+  file: '',
+  name: '',
+  status: ''
+}
 
 const editCompany = ref(false)
 const createCompany = ref(false)
-
-const onClickOpenEdit = (data: Company) => {
+const onClickOpenEdit = (data: CompanyPayload) => {
   editCompany.value = true
   Object.assign(companyForm, data)
 }
-
 const onClickOpenCreate = () => {
   createCompany.value = true
 }
@@ -88,6 +91,7 @@ const onClickOpenCreate = () => {
   >
     <AppForm
       :formData="companyForm"
+      :errorData="errorFields"
       :itemFields="itemFields"
       :onGetData="props.onGetCompany"
       :create="CompanyService.addCompany"
@@ -100,6 +104,7 @@ const onClickOpenCreate = () => {
   <Dialog v-model:visible="editCompany" modal header="Update Company" :style="{ width: '40rem' }">
     <AppForm
       :formData="companyForm"
+      :errorData="errorFields"
       :itemFields="itemFields"
       :onGetData="props.onGetCompany"
       :update="CompanyService.updateCompany"

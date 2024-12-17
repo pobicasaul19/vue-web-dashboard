@@ -1,7 +1,4 @@
-// const fs = require('fs');
-// const path = require('path');
-// const multer = require('multer');
-import fs from 'fs';
+import fs from 'fs'
 import path from 'path';
 import multer from 'multer';
 import { fileURLToPath } from 'url';
@@ -23,6 +20,4 @@ const storage = multer.diskStorage({
   },
 });
 
-const upload = multer({ storage })
-
-module.exports = { upload };
+export const upload = multer({ storage })

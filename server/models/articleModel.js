@@ -6,7 +6,7 @@ const articleSchema = {
     required: true,
     message: 'A related company is required.'
   },
-  image: {
+  file: {
     type: File,
     required: true,
     message: 'Image file is requried.'

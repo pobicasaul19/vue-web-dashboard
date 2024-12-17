@@ -16,7 +16,7 @@ const form = ref<loginData>({
   userName: '',
   password: ''
 })
-const errorValue = ref<loginData>({
+const errorValue = ref<Record<string, any>>({
   userName: '',
   password: ''
 })
@@ -44,6 +44,11 @@ const login = async () => {
   loading.value = true
   try {
     const response = await LoginService.validateLogin(form.value)
+    const value = {
+      userName: null,
+      password: null
+    }
+    errorValue.value = { ...value }
     handleSuccess(response)
   } catch (error: any) {
     const err = error.response.data.data

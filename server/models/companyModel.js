@@ -1,8 +1,8 @@
 const companySchema = {
-  logo: {
+  file: {
     type: File,
     required: true,
-    message: 'A logo URL is required.'
+    message: 'Logo file is required.'
   },
   name: {
     type: String,

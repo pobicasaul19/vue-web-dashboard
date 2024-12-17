@@ -33,7 +33,7 @@ export const createUser = async (req, res) => {
       return res.status(400).json({
         data: errors,
         metadata: {
-          message: 'Failed to create new user.'
+          message: 'An error occurred while creating new user.'
         }
       })
     }

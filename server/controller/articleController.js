@@ -2,13 +2,14 @@ import moment from 'moment';
 import { uuid, counter } from '../utils/index.js';
 import validationMessage from '../utils/validationError.js';
 import articleSchema from '../models/articleModel.js';
-import { loadArticleCollection } from '../config/db.js';
+import { loadArticleCollection, loadCompanyCollection } from '../config/db.js';
 
 // Get article lists
 export const getArticles = async (req, res) => {
   try {
     const articleCollection = await loadArticleCollection();
     const article = articleCollection.data.articles
+      .sort((a, b) => a.id - b.id);
     res.status(200).json(article);
   } catch (error) {
     console.error(error);
@@ -17,7 +18,7 @@ export const getArticles = async (req, res) => {
 };
 
 // Create article
-const createArticle = async (req, res) => {
+export const createArticle = async (req, res) => {
   try {
     const articleCollection = await loadArticleCollection();
     const { company, title, link, date, content, status, writer, editor } = req.body;
@@ -30,13 +31,13 @@ const createArticle = async (req, res) => {
       link,
       content
     }
-
-    const errors = validationMessage(fields, articleSchema);
+    const context = { articleCollection }
+    const errors = await validationMessage(fields, articleSchema, context);
     if (errors) {
       return res.status(400).json({
         data: errors,
         metadata: {
-          message: 'Please provied all the required fields.'
+          message: 'An error occurred whiled creating new article.'
         }
       });
     }
@@ -55,9 +56,9 @@ const createArticle = async (req, res) => {
       link,
       date: date ? moment(date).format('DD/MM/YYYY') : moment(new Date()).format('DD/MM/YYYY'),
       content,
-      status: status || 'For Edit',
-      writer: writer || null,
-      editor: editor || null,
+      status: status ?? 'For Edit',
+      writer: writer ?? null,
+      editor: editor ?? null,
     };
 
     articleCollection.data.articles.push(newArticle);
@@ -71,7 +72,7 @@ const createArticle = async (req, res) => {
 
 
 // Edit article
-const editArticle = async (req, res) => {
+export const editArticle = async (req, res) => {
   try {
     const articleCollection = await loadArticleCollection();
     const { uuid } = req.params;
@@ -86,12 +87,12 @@ const editArticle = async (req, res) => {
       content
     }
 
-    const errors = validationMessage(fields, articleSchema);
+    const errors = await validationMessage(fields, articleSchema);
     if (errors) {
       return res.status(400).json({
         data: errors,
         metadata: {
-          message: 'Please provied all the required fields.'
+          message: 'An error occurred whiled updating new article.'
         }
       });
     }

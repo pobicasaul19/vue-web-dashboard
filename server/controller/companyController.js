@@ -1,11 +1,14 @@
 import { uuid, counter } from '../utils/index.js';
 import { loadCompanyCollection } from '../config/db.js';
+import validationMessage from '../utils/validationError.js';
+import companySchema from '../models/companyModel.js'
 
 // Get company list
 export const getCompany = async (req, res) => {
   try {
     const companyCollection = await loadCompanyCollection();
-    const companies = companyCollection.data.companies;
+    const companies = companyCollection.data.companies
+      .sort((a, b) => a.id - b.id);
     res.status(200).json(companies);
   } catch (error) {
     res.status(500).json({ message: 'Server error' });
@@ -19,8 +22,16 @@ export const createCompany = async (req, res) => {
     const { name, status } = req.body;
     const file = req.file;
 
-    if (!file || !name || !status) {
-      return res.status(400).json({ message: 'Please provide all required fields: name, status, and logo.' });
+    const field = { name, file, status };
+    const context = { companyCollection };
+    const errors = await validationMessage(field, companySchema, context);
+    if (errors) {
+      return res.status(400).json({
+        data: errors,
+        metadata: {
+          message: 'An error occurred while creating new company.'
+        }
+      })
     }
 
     const fileUrl = `${req.protocol}://${req.get('host')}/assets/${file.filename}`;

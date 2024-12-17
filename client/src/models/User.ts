@@ -2,20 +2,15 @@ export interface AuthUser {
   userInfo: User | null;
   token: string | null;
 }
-export interface User {
-  _id: number;
-  id: number;
+export interface UserPayload {
   firstName: string;
   lastName: string;
-  userName: string;
   type: string;
   status: string
+}
+export interface User extends UserPayload {
+  uuid: string;
+  id: number;
+  userName: string;
 }
 
-export interface UserPayload {
-  uuid: string;
-  firstName: string;
-  lastName: string;
-  type: string;
-  status: string
-}

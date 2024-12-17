@@ -1,7 +1,9 @@
-export interface Company {
-  uuid: number;
-  id: number;
+export interface CompanyPayload {
   logo: string,
   name: string;
-  status: string
+  status: string;
+}
+export interface Company extends CompanyPayload {
+  uuid: number;
+  id: number;
 }

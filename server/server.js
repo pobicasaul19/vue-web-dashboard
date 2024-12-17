@@ -1,16 +1,3 @@
-// const express = require('express');
-// const bodyParser = require('body-parser');
-// const cors = require('cors');
-// const cookieParser = require('cookie-parser');
-
-// const swaggerUi = require('swagger-ui-express');
-// const swaggerInfo = require('./swagger');
-// const useMiddleware = require('./middleware/authMiddleware');
-
-// const path = require('path');
-// const { logger } = require('./utils')
-
-// const app = express();
 import path from 'path';
 import express from 'express';
 import bodyParser from 'body-parser';
@@ -44,12 +31,11 @@ import getUsers from './routes/api/users/index.js';
 import createUser from './routes/api/users/create.js';
 import updateUser from './routes/api/users/update.js';
 import getCompanies from './routes/api/company/index.js';
-// const createCompany = require('./routes/api/company/create');
-// const updateCompany = require('./routes/api/company/update');
+import createCompany from './routes/api/company/create.js';
+import updateCompany from './routes/api/company/update.js';
 import getArticles from './routes/api/articles/index.js';
-// const createArticle = require('./routes/api/articles/create');
-// const updateArticle = require('./routes/api/articles/update');
-
+import createArticle from './routes/api/articles/create.js';
+import updateArticle from './routes/api/articles/update.js';
 
 app.use('/api/auth/login', login);
 const dir = path.dirname(fileURLToPath(import.meta.url))
@@ -63,13 +49,13 @@ app.use('/api/users', updateUser);
 
 // Company endpoint
 app.use('/api/companies', getCompanies);
-// app.use('/api/companies', createCompany);
-// app.use('/api/companies', updateCompany);
+app.use('/api/companies', createCompany);
+app.use('/api/companies', updateCompany);
 
 // Article endpoint
 app.use('/api/articles', getArticles);
-// app.use('/api/articles', createArticle);
-// app.use('/api/articles', updateArticle);
+app.use('/api/articles', createArticle);
+app.use('/api/articles', updateArticle);
 
 // Start the server
 const port = 5000;

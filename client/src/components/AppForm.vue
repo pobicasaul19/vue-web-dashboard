@@ -19,8 +19,7 @@
             :option-value="items.label === 'Company' ? 'name' : 'value'"
             :rows="items.type === 'textarea' ? 5 : undefined"
             :cols="items.type === 'textarea' ? 30 : undefined"
-            :min-date="items.type === 'calendar' ? new Date() : undefined"
-            :maxFileSize="1000000"
+            :maxFileSize="2000000"
             ref="file"
             mode="basic"
             name="file"
@@ -125,6 +124,7 @@ const saveOrUpdate = async () => {
     payload.file = filePayload.value
     publishPayload.file = filePayload.value
   }
+  console.log(payload)
   props.mode === 'create'
     ? await props.create(props.isPublish ? publishPayload : payload)
     : await props.update(props.isPublish ? publishPayload : payload, props.uuid)
@@ -136,7 +136,7 @@ const onSave = async () => {
   try {
     Object.keys(errorValues).forEach((key) => {
       errorValues[key] = null
-    });
+    })
     await saveOrUpdate()
     showToast.add({
       severity: 'success',
@@ -144,12 +144,12 @@ const onSave = async () => {
       detail: `${props.name} was ${props.mode === 'edit' ? 'updated' : 'created'} successfully.`,
       life: 3000
     })
-    props.onGetData()
     emit('close');
+    props.onGetData()
   } catch (error: any) {
     console.log(error)
     const err = error.response.data.data
-    Object.keys(err).forEach((key) => {
+    Object?.keys(err).forEach((key) => {
       errorValues[key] = joinDataError(err, key)
     })
     showToast.add({

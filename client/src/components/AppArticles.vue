@@ -64,7 +64,7 @@ const itemFields = [
   {
     type: 'file',
     label: 'Image',
-    model: 'image'
+    model: 'file'
   },
   {
     type: 'input',
@@ -90,7 +90,7 @@ const itemFields = [
 
 const errorFields = {
   company: '',
-  image: '',
+  file: '',
   title: '',
   link: '',
   content: ''
@@ -125,7 +125,11 @@ onMounted(() => {
           />
         </template>
       </Column>
-      <Column field="title" header="Title" />
+      <Column field="title" header="Title">
+        <template #body="{ data }">
+          <p class="w-48 truncate ...">{{ data.title }}</p>
+        </template>
+      </Column>
       <Column field="link" header="Link">
         <template #body="{ data }">
           <a

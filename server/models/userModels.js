@@ -6,7 +6,6 @@ const userSchema = {
     validate: {
       custom: (value, { usersCollection }) => {
         const userInfo = usersCollection.data.users.some(user => user.firstName === value);
-        console.log(userInfo ? { valid: false, message: 'Firstname is taken.' } : { valid: true })
         return userInfo ? { valid: false, message: 'Firstname is taken.' } : { valid: true };
       },
     },
