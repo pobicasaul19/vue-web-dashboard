@@ -40,12 +40,12 @@ import getArticles from './routes/api/articles/index.js';
 import createArticle from './routes/api/articles/create.js';
 import updateArticle from './routes/api/articles/update.js';
 
-authMiddleware(app);
 
 app.use('/api/auth/login', login);
 const dir = path.dirname(fileURLToPath(import.meta.url))
 app.use('/assets', express.static(path.join(dir, 'assets')));
 
+authMiddleware(app);
 // Users endpoint
 app.use('/api/users', getUsers);
 app.use('/api/users', createUser);

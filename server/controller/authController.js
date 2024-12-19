@@ -5,7 +5,7 @@ import validationMessage from '../utils/validationError.js';
 
 // Generate access token
 const generateAccessToken = (uuid) => {
-  return jwt.sign({ uuid }, 'appTokenKey', { expiresIn: '12h' });
+  return jwt.sign(uuid, 'appTokenKey', { expiresIn: '12h' });
 };
 
 // Login user
