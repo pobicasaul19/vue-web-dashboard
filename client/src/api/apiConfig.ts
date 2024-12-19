@@ -3,8 +3,8 @@ import { useAuthStore } from '@/stores/useAuthStore';
 
 const authStore = useAuthStore();
 const axiosConfig = {
-  baseURL: 'http://localhost:5000/api/'
-  // baseURL: 'https://web-portal-production-f18a.up.railway.app/api'
+  // baseURL: 'http://localhost:5000/api/'
+  baseURL: 'https://web-portal-production-f18a.up.railway.app/api/'
 };
 
 // Token injector function to dynamically get the token

@@ -107,14 +107,14 @@ onMounted(() => {
     <AppButton :editor="true" :on-click="onClickOpenCreate" label="Create Article" />
     <DataTable
       :value="articles"
-      table-style="min-width: 50rem"
+      tableStyle="min-width: 50rem"
       class="capitalize datatable-container"
     >
       <template #empty>
         <Skeleton v-if="loading" />
         <p v-else class="text-center">No data available</p>
       </template>
-      <Column header="Image">
+      <Column header="Image" style="width: 15%">
         <template #body="{ data }">
           <img
             :src="data.image"
@@ -125,12 +125,12 @@ onMounted(() => {
           />
         </template>
       </Column>
-      <Column field="title" header="Title">
+      <Column field="title" header="Title" style="width: 15%">
         <template #body="{ data }">
-          <p class="w-48 truncate ...">{{ data.title }}</p>
+          <p class="w-56 truncate ...">{{ data.title }}</p>
         </template>
       </Column>
-      <Column field="link" header="Link">
+      <Column field="link" header="Link" style="width: 15%">
         <template #body="{ data }">
           <a
             class="underline underline-offset-2 text-indigo-800"
@@ -140,18 +140,18 @@ onMounted(() => {
           />
         </template>
       </Column>
-      <Column field="" header="Writer">
+      <Column field="" header="Writer" style="width: 15%">
         <template #body="{ data }">
           <span>{{ data.writer || '--' }}</span>
         </template>
       </Column>
-      <Column field="" header="Editor">
+      <Column field="" header="Editor" style="width: 15%">
         <template #body="{ data }">
           <span>{{ data.editor || '--' }} </span>
         </template>
       </Column>
-      <Column field="status" header="Status" />
-      <Column field="" header="Action">
+      <Column field="status" header="Status" style="width: 15%" />
+      <Column field="" header="Action" style="width: 15%">
         <template #body="{ data }">
           <Button
             :disabled="data.status === 'Published' && !authStore.isAdmin"
