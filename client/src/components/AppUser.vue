@@ -95,7 +95,12 @@ onMounted(() => {
       <Column field="status" header="Status" />
       <Column field="" header="Action">
         <template #body="{ data }">
-          <i class="pi pi-pencil cursor-pointer" @click="onClickOpenEdit(data)" />
+          <Button
+            icon="pi pi-pencil cursor-pointer"
+            severity="secondary"
+            rounded
+            @click="onClickOpenEdit(data)"
+          />
         </template>
       </Column>
     </DataTable>
@@ -115,7 +120,7 @@ onMounted(() => {
   />
 
   <AppForm
-    :showMdal="editUser"
+    :showModal="editUser"
     :header="'Edit User Details'"
     :formData="userForm"
     :errorData="errorFields"

@@ -51,7 +51,6 @@ const login = async () => {
     errorValue.value = { ...value };
     handleSuccess(response);
   } catch (error: any) {
-    console.log(error);
     const err = error.response.data.data;
     const errors = {
       userName: joinDataError(err, 'userName'),
