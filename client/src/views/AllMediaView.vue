@@ -2,7 +2,9 @@
 import { ref, onMounted } from 'vue';
 import CompanyService from '../services/CompanyService';
 import type { Company } from '../models/Company';
+import { useAuthStore } from '../stores/useAuthStore';
 
+const authStore = useAuthStore();
 const companies = ref<Company[]>([]);
 const loading = ref(true);
 const images = ref([] as { logo: string; name: string; status: string }[]);
@@ -31,9 +33,10 @@ onMounted(() => {
 
 <template>
   <div class="flex flex-col space-y-10">
-    <AppUser />
+    <AppUser v-if="authStore.isAdmin" />
     <AppCompanies
-      :on-get-company="onGetCompanies"
+      v-if="authStore.isAdmin"
+      :onGetCompany="onGetCompanies"
       :company="companies"
       :images="images"
       :loading="loading"
@@ -41,9 +44,9 @@ onMounted(() => {
 
     <AppArticles
       v-if="companies.length > 0"
-      :on-get-data="onGetCompanies"
+      :onGetData="onGetCompanies"
       :company="companies"
-      :is-loading="loading"
+      :isLoading="loading"
     />
   </div>
 </template>

@@ -154,7 +154,7 @@ onMounted(() => {
       <Column field="" header="Action">
         <template #body="{ data }">
           <Button
-            :disabled="data.status === 'Publish' && !authStore.isEditor"
+            :disabled="data.status === 'Published' && !authStore.isAdmin"
             icon="pi pi-pencil cursor-pointer"
             severity="secondary"
             rounded

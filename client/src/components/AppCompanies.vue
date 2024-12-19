@@ -50,7 +50,7 @@ const onClickOpenCreate = () => {
 };
 </script>
 
-<template>
+<template >
   <div class="space-y-5">
     <h1 class="text-3xl font-medium">Company Management</h1>
     <AppButton :editor="true" :on-click="onClickOpenCreate" label="Create Company" />
