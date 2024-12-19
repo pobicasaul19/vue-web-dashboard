@@ -1,32 +1,32 @@
-import { defineStore } from 'pinia'
-import { ref, computed } from 'vue'
-import type { AuthUser, User } from '../models/User'
+import { defineStore } from 'pinia';
+import { ref, computed } from 'vue';
+import type { AuthUser, User } from '../models/User';
 
 export const useAuthStore = defineStore(
   'auth',
   () => {
     // State
-    const userInfo = ref<AuthUser['userInfo']>(null)
-    const token = ref<AuthUser['token']>(null)
+    const userInfo = ref<AuthUser['userInfo']>(null);
+    const token = ref<AuthUser['token']>(null);
 
     // Getters
-    const isEditor = computed(() => userInfo.value?.type === 'editor')
-    const isAuthenticated = computed(() => !!userInfo.value && !!token.value)
-    const getUserInfo = computed(() => userInfo.value)
-    const getUserById = (uuid: string) => computed(() => userInfo.value?.uuid === uuid)
-    const getUsername = computed(() => `${userInfo.value?.firstName} ${userInfo.value?.lastName}`)
+    const isEditor = computed(() => userInfo.value?.type === 'editor');
+    const isAuthenticated = computed(() => !!userInfo.value && !!token.value);
+    const getUserInfo = computed(() => userInfo.value);
+    const getUserById = (uuid: string) => computed(() => userInfo.value?.uuid === uuid);
+    const getUsername = computed(() => `${userInfo.value?.firstName} ${userInfo.value?.lastName}`);
 
     // Actions
     const setUserInfo = (user: User) => {
-      userInfo.value = user
-    }
+      userInfo.value = user;
+    };
     const setToken = (newToken: string) => {
-      token.value = newToken
-    }
+      token.value = newToken;
+    };
     const logout = () => {
-      userInfo.value = null
-      token.value = null
-    }
+      userInfo.value = null;
+      token.value = null;
+    };
 
     return {
       userInfo,
@@ -39,9 +39,9 @@ export const useAuthStore = defineStore(
       setUserInfo,
       setToken,
       logout
-    }
+    };
   },
   {
     persist: true
   }
-)
+);

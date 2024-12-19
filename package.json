@@ -11,7 +11,7 @@
     "start:server": "cd ./server && npm run start",
     "install:server": "cd ./server && npm install",
     "install:client": "cd ./client && npm install",
-    "build:all": "npm intall && npm run build:client && npm run build:server",
+    "build:all": "npm run build:client && npm run build:server",
     "install:all": "npm install && npm run install:server && npm run install:client",
     "start": "concurrently \"npm run start:server\" \"npm run start:client\""
   },

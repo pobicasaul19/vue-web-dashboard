@@ -1,78 +1,79 @@
 <script setup lang="ts">
-import { ref } from 'vue'
-import { useRouter } from 'vue-router'
-import { useAuthStore } from '../stores/useAuthStore'
-import { useToast } from 'primevue/usetoast'
-import LoginService from '../services/LoginService'
-import type { loginData } from '../models/Authentication'
-import type { User } from '../models/User'
-import { joinDataError } from '../utils'
+import { ref } from 'vue';
+import { useRouter } from 'vue-router';
+import { useAuthStore } from '../stores/useAuthStore';
+import { useToast } from 'primevue/usetoast';
+import LoginService from '../services/LoginService';
+import type { loginData } from '../models/Authentication';
+import type { User } from '../models/User';
+import { joinDataError } from '../utils';
 
-const router = useRouter()
-const authStore = useAuthStore()
-const toast = useToast()
+const router = useRouter();
+const authStore = useAuthStore();
+const toast = useToast();
 
 const form = ref<loginData>({
   userName: '',
   password: ''
-})
+});
 const errorValue = ref<Record<string, any>>({
   userName: '',
   password: ''
-})
+});
 
 interface DataResponse {
-  user: User
-  token: string
+  user: User;
+  token: string;
 }
 
 const handleSuccess = ({ token, user }: DataResponse) => {
-  authStore.setUserInfo(user)
-  authStore.setToken(token)
+  authStore.setUserInfo(user);
+  authStore.setToken(token);
   toast.add({
     severity: 'success',
     summary: 'Login Successful',
     detail: 'You have been successfully logged in.'
-  })
+  });
   setTimeout(() => {
-    router.push('/')
-  }, 1500)
-}
+    router.push('/');
+  }, 1500);
+};
 
-const loading = ref(false)
+const loading = ref(false);
 const login = async () => {
-  loading.value = true
+  loading.value = true;
   try {
-    const response = await LoginService.validateLogin(form.value)
+    const response = await LoginService.validateLogin(form.value);
     const value = {
       userName: null,
       password: null
-    }
-    errorValue.value = { ...value }
-    handleSuccess(response)
+    };
+    errorValue.value = { ...value };
+    handleSuccess(response);
   } catch (error: any) {
-    const err = error.response.data.data
+    console.log(error);
+    const err = error.response.data.data;
     const errors = {
       userName: joinDataError(err, 'userName'),
       password: joinDataError(err, 'password')
-    }
-    errorValue.value = { ...errors }
+    };
+    errorValue.value = { ...errors };
   } finally {
-    loading.value = false
+    loading.value = false;
   }
-}
+};
 </script>
 
 <template>
   <app-mode />
   <div class="flex flex-col items-center justify-center w-full h-screen">
-    <form @submit.prevent="login" class="border p-10 rounded-lg shadow-sm space-y-6 w-96">
+    <form class="border p-10 rounded-lg shadow-sm space-y-6 w-96" @submit.prevent="login">
       <div class="w-full">
         <InputText
           id="username"
+          v-model="form.userName"
           type="name"
           placeholder="Username"
-          v-model="form.userName"
           class="w-full"
         />
         <small v-if="errorValue.userName" class="text-red-600">{{ errorValue.userName }}</small>
@@ -80,9 +81,9 @@ const login = async () => {
       <div class="w-full">
         <Password
           id="password"
-          type="password"
           v-model="form.password"
-          toggleMask
+          type="password"
+          toggle-mask
           class="w-full"
           placeholder="Password"
           :feedback="false"

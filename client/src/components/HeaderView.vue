@@ -1,24 +1,24 @@
 <script setup lang="ts">
-import { ref } from 'vue'
-const darkMode = ref(false)
+import { ref } from 'vue';
+const darkMode = ref(false);
 const toggleColorScheme = () => {
-  const element = document.querySelector('html')
+  const element = document.querySelector('html');
   if (darkMode.value) {
-    element?.classList.toggle('my-app-dark')
+    element?.classList.toggle('my-app-dark');
   } else {
-    element?.classList.remove('my-app-dark')
+    element?.classList.remove('my-app-dark');
   }
-}
+};
 </script>
 
 <template>
   <header>
     <ToggleSwitch
-      @change="toggleColorScheme"
       v-model="darkMode"
       :pt="{
         slider: 'my-toggle-slider'
       }"
+      @change="toggleColorScheme"
     />
   </header>
 </template>

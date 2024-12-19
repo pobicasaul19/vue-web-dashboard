@@ -1,17 +1,17 @@
 <script lang="ts" setup>
-import { reactive, ref, onMounted } from 'vue'
-import { useAuthStore } from '../stores/useAuthStore'
-import ArticleService from '../services/ArticleService'
-import type { Article, ArticlePayload } from '../models/Article'
-import type { Company } from '../models/Company'
+import { reactive, ref, onMounted } from 'vue';
+import { useAuthStore } from '../stores/useAuthStore';
+import ArticleService from '../services/ArticleService';
+import type { Article, ArticlePayload } from '../models/Article';
+import type { Company } from '../models/Company';
 
 const props = defineProps<{
-  onGetData: () => void
-  company: Company[]
-  isLoading: boolean
-}>()
+  onGetData: () => void;
+  company: Company[];
+  isLoading: boolean;
+}>();
 
-const authStore = useAuthStore()
+const authStore = useAuthStore();
 
 const articleForm = reactive<Record<string, any>>({
   company: props.company,
@@ -19,40 +19,40 @@ const articleForm = reactive<Record<string, any>>({
   link: '',
   date: null,
   content: ''
-})
+});
 
 const resetArticleForm = () => {
-  articleForm.company = ''
-  articleForm.title = ''
-  articleForm.link = ''
-  articleForm.date = null
-  articleForm.content = ''
-}
+  articleForm.company = '';
+  articleForm.title = '';
+  articleForm.link = '';
+  articleForm.date = null;
+  articleForm.content = '';
+};
 
-const editUser = ref(false)
-const createUser = ref(false)
+const editArticle = ref(false);
+const createArticle = ref(false);
 const onClickOpenEdit = (data: ArticlePayload) => {
-  editUser.value = true
-  Object.assign(articleForm, data)
-}
+  editArticle.value = true;
+  Object.assign(articleForm, data);
+};
 const onClickOpenCreate = () => {
-  createUser.value = true
-  resetArticleForm()
-}
+  createArticle.value = true;
+  resetArticleForm();
+};
 
-const articles = ref<Article[]>([])
-const loading = ref(true)
+const articles = ref<Article[]>([]);
+const loading = ref(true);
 const onGetArticles = async () => {
-  loading.value = true
+  loading.value = true;
   try {
-    const data = await ArticleService.getArticles()
-    articles.value = data
+    const data = await ArticleService.getArticles();
+    articles.value = data;
   } catch (error) {
-    console.error(error)
+    console.error(error);
   } finally {
-    loading.value = false
+    loading.value = false;
   }
-}
+};
 
 const itemFields = [
   {
@@ -86,7 +86,7 @@ const itemFields = [
     label: 'Content',
     model: 'content'
   }
-]
+];
 
 const errorFields = {
   company: '',
@@ -94,25 +94,25 @@ const errorFields = {
   title: '',
   link: '',
   content: ''
-}
+};
 
 onMounted(() => {
-  onGetArticles()
-})
+  onGetArticles();
+});
 </script>
 
 <template>
   <div class="space-y-5">
     <h1 class="text-3xl font-medium">Article Management</h1>
-    <app-button :editor="true" :onClick="onClickOpenCreate" label="Create Article" />
+    <AppButton :editor="true" :on-click="onClickOpenCreate" label="Create Article" />
     <DataTable
       :value="articles"
-      tableStyle="min-width: 50rem"
+      table-style="min-width: 50rem"
       class="capitalize datatable-container"
     >
       <template #empty>
         <Skeleton v-if="loading" />
-        <p class="text-center" v-else>No data available</p>
+        <p v-else class="text-center">No data available</p>
       </template>
       <Column header="Image">
         <template #body="{ data }">
@@ -156,46 +156,41 @@ onMounted(() => {
           <Button
             :disabled="data.status === 'Publish' && !authStore.isEditor"
             icon="pi pi-pencil cursor-pointer"
-            @click="onClickOpenEdit(data)"
             severity="secondary"
             rounded
+            @click="onClickOpenEdit(data)"
           />
         </template>
       </Column>
     </DataTable>
   </div>
 
-  <Dialog
-    v-model:visible="createUser"
-    modal
-    header="Create New Article"
-    :style="{ width: '50rem' }"
-  >
-    <AppForm
-      :onGetData="onGetArticles"
-      :isPublish="true"
-      :formData="articleForm"
-      :errorData="errorFields"
-      :itemFields="itemFields"
-      :create="ArticleService.addArticle"
-      mode="create"
-      name="Article"
-      @close="createUser = false"
-    />
-  </Dialog>
+  <AppForm
+    :showModal="createArticle"
+    :header="'Create New Article'"
+    :onGetData="onGetArticles"
+    :isPublish="true"
+    :formData="articleForm"
+    :errorData="errorFields"
+    :itemFields="itemFields"
+    :create="ArticleService.addArticle"
+    mode="create"
+    name="Article"
+    @close="createArticle = false"
+  />
 
-  <Dialog v-model:visible="editUser" modal header="Update Article" :style="{ width: '50rem' }">
-    <AppForm
-      :onGetData="onGetArticles"
-      :isPublish="true"
-      :formData="articleForm"
-      :errorData="errorFields"
-      :itemFields="itemFields"
-      :update="ArticleService.updateArticle"
-      :uuid="articleForm.uuid"
-      mode="edit"
-      name="Article"
-      @close="editUser = false"
-    />
-  </Dialog>
+  <AppForm
+    :showModal="editArticle"
+    :header="'Edit Article Details'"
+    :onGetData="onGetArticles"
+    :isPublish="true"
+    :formData="articleForm"
+    :errorData="errorFields"
+    :itemFields="itemFields"
+    :update="ArticleService.updateArticle"
+    :uuid="articleForm.uuid"
+    mode="edit"
+    name="Article"
+    @close="editArticle = false"
+  />
 </template>

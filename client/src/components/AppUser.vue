@@ -1,22 +1,22 @@
 <script lang="ts" setup>
-import { reactive, ref, onMounted } from 'vue'
-import UserService from '../services/UserService'
-import type { User, UserPayload } from '../models/User'
-import { type, status } from '../utils'
+import { reactive, ref, onMounted } from 'vue';
+import UserService from '../services/UserService';
+import type { User, UserPayload } from '../models/User';
+import { type, status } from '../utils';
 
 const userForm = reactive<Record<string, any>>({
   firstName: '',
   lastName: '',
   type: '',
   status: ''
-})
+});
 
 const resetUserForm = () => {
-  userForm.firstName = ''
-  userForm.lastName = ''
-  userForm.type = ''
-  userForm.status = ''
-}
+  userForm.firstName = '';
+  userForm.lastName = '';
+  userForm.type = '';
+  userForm.status = '';
+};
 
 const itemFields = [
   {
@@ -41,53 +41,53 @@ const itemFields = [
     model: 'status',
     options: status
   }
-]
+];
 
 const errorFields = {
   firstName: '',
   lastName: '',
   type: '',
   status: ''
-}
+};
 
-const editUser = ref(false)
-const createUser = ref(false)
+const editUser = ref(false);
+const createUser = ref(false);
 const onClickOpenEdit = (data: UserPayload) => {
-  editUser.value = true
-  Object.assign(userForm, data)
-}
+  editUser.value = true;
+  Object.assign(userForm, data);
+};
 const onClickOpenCreate = () => {
-  createUser.value = true
-  resetUserForm()
-}
+  createUser.value = true;
+  resetUserForm();
+};
 
-const users = ref<User[]>([])
-const loading = ref(true)
+const users = ref<User[]>([]);
+const loading = ref(true);
 const onGetUsers = async () => {
-  loading.value = true
+  loading.value = true;
   try {
-    const data = await UserService.getUsers()
-    users.value = data
+    const data = await UserService.getUsers();
+    users.value = data;
   } catch (error) {
-    console.error(error)
+    console.error(error);
   } finally {
-    loading.value = false
+    loading.value = false;
   }
-}
+};
 
 onMounted(() => {
-  onGetUsers()
-})
+  onGetUsers();
+});
 </script>
 
 <template>
   <div class="space-y-5">
     <h1 class="text-3xl font-medium">User Management</h1>
-    <app-button :editor="true" :onClick="onClickOpenCreate" label="Create User" />
-    <DataTable :value="users" tableStyle="min-width: 50rem" class="capitalize datatable-container">
+    <AppButton :editor="true" @click="onClickOpenCreate" label="Create User" />
+    <DataTable :value="users" table-style="min-width: 50rem" class="capitalize datatable-container">
       <template #empty>
         <Skeleton v-if="loading" />
-        <p class="text-center" v-else>No data available</p>
+        <p v-else class="text-center">No data available</p>
       </template>
       <Column field="firstName" header="Firstname" />
       <Column field="lastName" header="Lastname" />
@@ -101,30 +101,30 @@ onMounted(() => {
     </DataTable>
   </div>
 
-  <Dialog v-model:visible="createUser" modal header="Create New User" :style="{ width: '40rem' }">
-    <AppForm
-      :formData="userForm"
-      :errorData="errorFields"
-      :itemFields="itemFields"
-      :onGetData="onGetUsers"
-      :create="UserService.addUser"
-      mode="create"
-      name="User"
-      @close="createUser = false"
-    />
-  </Dialog>
+  <AppForm
+    :showModal="createUser"
+    :header="'Create New User'"
+    :formData="userForm"
+    :errorData="errorFields"
+    :itemFields="itemFields"
+    :onGetData="onGetUsers"
+    :create="UserService.addUser"
+    mode="create"
+    name="User"
+    @close="createUser = false"
+  />
 
-  <Dialog v-model:visible="editUser" modal header="Update User" :style="{ width: '40rem' }">
-    <AppForm
-      :formData="userForm"
-      :errorData="errorFields"
-      :itemFields="itemFields"
-      :onGetData="onGetUsers"
-      :update="UserService.updateUser"
-      :uuid="userForm.uuid"
-      mode="edit"
-      name="User"
-      @close="editUser = false"
-    />
-  </Dialog>
+  <AppForm
+    :showMdal="editUser"
+    :header="'Edit User Details'"
+    :formData="userForm"
+    :errorData="errorFields"
+    :itemFields="itemFields"
+    :onGetData="onGetUsers"
+    :update="UserService.updateUser"
+    :uuid="userForm.uuid"
+    mode="edit"
+    name="User"
+    @close="editUser = false"
+  />
 </template>

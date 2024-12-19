@@ -1,10 +1,4 @@
-import { upload } from '../middleware/multerMiddleware.js';
 const companySchema = {
-  file: {
-    type: upload.single('file'),
-    required: true,
-    message: 'Logo file is required.'
-  },
   name: {
     type: String,
     required: true,

@@ -3,6 +3,16 @@ import { uuid, counter } from '../utils/index.js';
 import validationMessage from '../utils/validationError.js';
 import articleSchema from '../models/articleModel.js';
 import { loadArticleCollection, loadCompanyCollection } from '../config/db.js';
+import { upload } from '../middleware/multerMiddleware.js';
+
+const schema = {
+  ...articleSchema,
+  file: {
+    type: upload.single('file'),
+    required: true,
+    message: 'Image file is requried.'
+  }
+}
 
 // Get article lists
 export const getArticles = async (req, res) => {
@@ -32,7 +42,7 @@ export const createArticle = async (req, res) => {
       content
     }
     const context = { articleCollection }
-    const errors = await validationMessage(fields, articleSchema, context);
+    const errors = await validationMessage(fields, schema, context);
     if (errors) {
       return res.status(400).json({
         data: errors,
@@ -114,7 +124,7 @@ export const editArticle = async (req, res) => {
       content,
       status,
       writer: writer ?? null,
-      editor: editor ?? null
+      editor: editor === null ? null : editor
     }
     await articleCollection.write();
     res.status(200).json({

@@ -18,12 +18,7 @@ declare module 'vue' {
     Card: typeof import('primevue/card')['default']
     Column: typeof import('primevue/column')['default']
     DataTable: typeof import('primevue/datatable')['default']
-    DatePicker: typeof import('primevue/datepicker')['default']
     Dialog: typeof import('primevue/dialog')['default']
-    FileUpload: typeof import('primevue/fileupload')['default']
-    FloatLabel: typeof import('primevue/floatlabel')['default']
-    Form: typeof import('@primevue/forms/form')['default']
-    FormField: typeof import('@primevue/forms/formfield')['default']
     HeaderView: typeof import('./src/components/HeaderView.vue')['default']
     Image: typeof import('primevue/image')['default']
     InputText: typeof import('primevue/inputtext')['default']
@@ -32,9 +27,7 @@ declare module 'vue' {
     ProgressSpinner: typeof import('primevue/progressspinner')['default']
     RouterLink: typeof import('vue-router')['RouterLink']
     RouterView: typeof import('vue-router')['RouterView']
-    Select: typeof import('primevue/select')['default']
     Skeleton: typeof import('primevue/skeleton')['default']
-    Textarea: typeof import('primevue/textarea')['default']
     Toast: typeof import('primevue/toast')['default']
   }
 }

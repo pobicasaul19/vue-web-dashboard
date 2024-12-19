@@ -1,38 +1,38 @@
 <script setup lang="ts">
-import { ref, onMounted } from 'vue'
-import ArticleService from '../services/ArticleService'
-import type { Article } from '../models/Article'
+import { ref, onMounted } from 'vue';
+import ArticleService from '../services/ArticleService';
+import type { Article } from '../models/Article';
 
-const articles = ref<Article[]>([])
-const loading = ref(true)
-const error = ref<string | null>(null)
+const articles = ref<Article[]>([]);
+const loading = ref(true);
+const error = ref<string | null>(null);
 
-const isExpanded = ref<boolean[]>([])
+const isExpanded = ref<boolean[]>([]);
 
 const fetchArticles = async () => {
-  loading.value = true
+  loading.value = true;
   try {
-    const data = await ArticleService.getArticles()
-    articles.value = data
-    isExpanded.value = data?.map(() => false)
+    const data = await ArticleService.getArticles();
+    articles.value = data;
+    isExpanded.value = data?.map(() => false);
   } catch (err) {
-    console.error(err)
-    error.value = 'Failed to fetch articles. Please try again later.'
+    console.error(err);
+    error.value = 'Failed to fetch articles. Please try again later.';
   } finally {
-    loading.value = false
+    loading.value = false;
   }
-}
+};
 
 const truncateContent = (content: string, maxLength = 100) => {
-  return content.length > maxLength ? content.substring(0, maxLength) + '...' : content
-}
+  return content.length > maxLength ? content.substring(0, maxLength) + '...' : content;
+};
 const toggleReadMore = (index: number) => {
-  isExpanded.value[index] = !isExpanded.value[index]
-}
+  isExpanded.value[index] = !isExpanded.value[index];
+};
 
 onMounted(() => {
-  fetchArticles()
-})
+  fetchArticles();
+});
 </script>
 
 <template>

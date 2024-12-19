@@ -1,19 +1,19 @@
 <script lang="ts" setup>
-import { reactive, ref } from 'vue'
-import { status } from '../utils'
-import CompanyService from '../services/CompanyService'
-import type { Company, CompanyPayload } from '../models/Company'
+import { reactive, ref } from 'vue';
+import { status } from '../utils';
+import CompanyService from '../services/CompanyService';
+import type { Company, CompanyPayload } from '../models/Company';
 
 const props = defineProps<{
-  onGetCompany: () => void
-  images: Company[]
-  loading: boolean
-}>()
+  onGetCompany: () => void;
+  images: Company[];
+  loading: boolean;
+}>();
 
 const companyForm = reactive<Record<string, any>>({
   name: '',
   status: ''
-})
+});
 
 const itemFields = [
   {
@@ -32,34 +32,34 @@ const itemFields = [
     model: 'status',
     options: status
   }
-]
+];
 const errorFields = {
   file: '',
   name: '',
   status: ''
-}
+};
 
-const editCompany = ref(false)
-const createCompany = ref(false)
+const editCompany = ref(false);
+const createCompany = ref(false);
 const onClickOpenEdit = (data: CompanyPayload) => {
-  editCompany.value = true
-  Object.assign(companyForm, data)
-}
+  editCompany.value = true;
+  Object.assign(companyForm, data);
+};
 const onClickOpenCreate = () => {
-  createCompany.value = true
-}
+  createCompany.value = true;
+};
 </script>
 
 <template>
   <div class="space-y-5">
     <h1 class="text-3xl font-medium">Company Management</h1>
-    <app-button :editor="true" :onClick="onClickOpenCreate" label="Create Company" />
+    <AppButton :editor="true" :on-click="onClickOpenCreate" label="Create Company" />
     <div class="grid grid-cols-1 sm:grid-cols-2 gap-5">
       <Card v-for="(item, i) in images" :key="i">
         <template #header>
           <div class="h-96 flex items-center justify-end">
             <ProgressSpinner v-if="props.loading" />
-            <Image :src="item.logo" :alt="item.name" preview class="p-5 w-full h-full" v-else />
+            <Image v-else :src="item.logo" :alt="item.name" preview class="p-5 w-full h-full" />
           </div>
         </template>
         <template #title>
@@ -77,43 +77,38 @@ const onClickOpenCreate = () => {
         </template>
 
         <template #footer>
-          <Button @click="onClickOpenEdit(item)" label="Edit" severity="info" class="w-36" />
+          <Button label="Edit" severity="info" class="w-36" @click="onClickOpenEdit(item)" />
         </template>
       </Card>
     </div>
   </div>
 
-  <Dialog
-    v-model:visible="createCompany"
-    modal
-    header="Create New Company"
-    :style="{ width: '40rem' }"
-  >
-    <AppForm
-      :formData="companyForm"
-      :errorData="errorFields"
-      :itemFields="itemFields"
-      :onGetData="props.onGetCompany"
-      :create="CompanyService.addCompany"
-      mode="create"
-      name="Company"
-      @close="createCompany = false"
-    />
-  </Dialog>
+  <AppForm
+    :showModal="createCompany"
+    :header="'Create New Company'"
+    :formData="companyForm"
+    :errorData="errorFields"
+    :itemFields="itemFields"
+    :onGetData="props.onGetCompany"
+    :create="CompanyService.addCompany"
+    mode="create"
+    name="Company"
+    @close="createCompany = false"
+  />
 
-  <Dialog v-model:visible="editCompany" modal header="Update Company" :style="{ width: '40rem' }">
-    <AppForm
-      :formData="companyForm"
-      :errorData="errorFields"
-      :itemFields="itemFields"
-      :onGetData="props.onGetCompany"
-      :update="CompanyService.updateCompany"
-      :uuid="companyForm.uuid"
-      mode="edit"
-      name="Company"
-      @close="editCompany = false"
-    />
-  </Dialog>
+  <AppForm
+    :showModal="editCompany"
+    :header="'Edit Company Details'"
+    :form-data="companyForm"
+    :error-data="errorFields"
+    :item-fields="itemFields"
+    :on-get-data="props.onGetCompany"
+    :update="CompanyService.updateCompany"
+    :uuid="companyForm.uuid"
+    mode="edit"
+    name="Company"
+    @close="editCompany = false"
+  />
 </template>
 
 <style lang="scss">

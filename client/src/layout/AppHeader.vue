@@ -1,12 +1,12 @@
 <script setup lang="ts">
-import router from '../router'
-import { useLayout } from './layout'
-import { useAuthStore } from '../stores/useAuthStore'
-import { ref } from 'vue'
+import router from '../router';
+import { useLayout } from './layout';
+import { useAuthStore } from '../stores/useAuthStore';
+import { ref } from 'vue';
 
-const { toggleDarkMode, isDarkTheme } = useLayout()
+const { toggleDarkMode, isDarkTheme } = useLayout();
 
-const op = ref()
+const op = ref();
 const menu = ref([
   {
     label: 'Dashboard',
@@ -16,20 +16,20 @@ const menu = ref([
     label: 'All Media',
     to: '/media'
   }
-])
+]);
 
-const authStore = useAuthStore()
+const authStore = useAuthStore();
 const logout = () => {
-  authStore.logout()
-  router.push('/account/login')
-}
+  authStore.logout();
+  router.push('/account/login');
+};
 const user = ref({
   name: `${authStore.userInfo?.firstName} ${authStore.userInfo?.lastName}`,
   type: authStore.userInfo?.type
-})
+});
 const toggle = (e: Event) => {
-  op.value.toggle(e)
-}
+  op.value.toggle(e);
+};
 </script>
 
 <template>
@@ -45,8 +45,8 @@ const toggle = (e: Event) => {
     <div class="layout-topbar-menu">
       <div class="layout-topbar-action">
         <i
-          @click="toggleDarkMode"
           :class="['layout-topbar-actions pi', { 'pi-moon': isDarkTheme, 'pi-sun': !isDarkTheme }]"
+          @click="toggleDarkMode"
         />
         <div class="layout-topbar-actions">
           <i class="pi pi-user" @click="toggle" />
@@ -67,7 +67,7 @@ const toggle = (e: Event) => {
           <span class="capitalize text-sm text-gray-500">{{ user.type }}</span>
         </div>
       </div>
-      <Button class="w-full" @click="logout" label="Logout" />
+      <Button class="w-full" label="Logout" @click="logout" />
     </div>
   </Popover>
 </template>

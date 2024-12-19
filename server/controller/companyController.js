@@ -1,7 +1,17 @@
 import { uuid, counter } from '../utils/index.js';
 import { loadCompanyCollection } from '../config/db.js';
 import validationMessage from '../utils/validationError.js';
-import companySchema from '../models/companyModel.js'
+import companySchema from '../models/companyModel.js';
+import { upload } from '../middleware/multerMiddleware.js';
+
+const schema = {
+  ...companySchema,
+  file: {
+    type: upload.single('file'),
+    required: true,
+    message: 'Image file is requried.'
+  }
+}
 
 // Get company list
 export const getCompany = async (req, res) => {
@@ -24,7 +34,7 @@ export const createCompany = async (req, res) => {
 
     const field = { name, file, status };
     const context = { companyCollection };
-    const errors = await validationMessage(field, companySchema, context);
+    const errors = await validationMessage(field, schema, context);
     if (errors) {
       return res.status(400).json({
         data: errors,
