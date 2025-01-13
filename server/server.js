@@ -63,7 +63,8 @@ app.use('/api/articles', updateArticle);
 
 // Start the server
 const port = 5000;
+const apiUri = process.env.APP_API_URI || `http://localhost:${port}`;
 app.listen(port, async () => {
-  logger.info(`Server running on  http://localhost:${port}`)
-  logger.info(`Swagger running on http://localhost:${port}/documentation`)
+  logger.info(`Server running on ${apiUri}`);
+  logger.info(`Swagger running on ${apiUri}/documentation`);
 });
