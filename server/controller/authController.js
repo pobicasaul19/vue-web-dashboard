@@ -15,6 +15,8 @@ export const login = async (req, res) => {
     const usersCollection = await loadUserCollection();
     const { userName, password } = req.body;
 
+    console.log('Login attempt:', { userName, password }); // Add this line for logging
+
     const field = { userName, password }
     const context = { usersCollection, userName }
     const errors = await validationMessage(field, authSchema, context)
