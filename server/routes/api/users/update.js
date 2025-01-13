@@ -46,6 +46,6 @@ import { updateUser } from '../../../controller/userController.js';
  *       400:
  *         description: Bad request
  */
-const router = express.Router();
-router.put('/:uuid', updateUser);
+const router = express.Router()
+  .put('/:uuid', updateUser);
 export default router

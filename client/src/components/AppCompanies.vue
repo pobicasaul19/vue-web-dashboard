@@ -38,6 +38,10 @@ const errorFields = {
   name: '',
   status: ''
 };
+const resetForm = () => {
+  companyForm.name = '';
+  companyForm.status = '';
+};
 
 const editCompany = ref(false);
 const createCompany = ref(false);
@@ -47,6 +51,7 @@ const onClickOpenEdit = (data: CompanyPayload) => {
 };
 const onClickOpenCreate = () => {
   createCompany.value = true;
+  resetForm();
 };
 </script>
 
@@ -63,14 +68,9 @@ const onClickOpenCreate = () => {
           </div>
         </template>
         <template #title>
-          <p class="flex flex-col items-start sm:items-center sm:flex-row sm:space-x-1">
-            <span class="capitalize"> {{ item.name }} - </span>
-            <span
-              :class="[
-                'text-base capitalize',
-                item.status === 'active' ? 'text-green-600' : 'text-red-600'
-              ]"
-            >
+          <p class="capitalize flex flex-col items-start">
+            <span>{{ item.name }}</span>
+            <span :class="['text-sm', item.status === 'active' ? 'text-green-600' : 'text-red-600']">
               {{ item.status }}
             </span>
           </p>

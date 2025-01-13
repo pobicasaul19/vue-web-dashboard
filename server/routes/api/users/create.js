@@ -45,6 +45,6 @@ import { createUser } from '../../../controller/userController.js';
  *       400:
  *         description: Bad request
  */
-const router = express.Router();
-router.post('/create', createUser);
+const router = express.Router()
+  .post('/create', createUser);
 export default router;

@@ -14,6 +14,6 @@ import { getCompany } from '../../../controller/companyController.js';
  *       400:
  *         description: Bad request
  */
-const router = express.Router();
-router.get('/', getCompany);
+const router = express.Router()
+  .get('/', getCompany);
 export default router;

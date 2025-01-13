@@ -2,10 +2,11 @@ import jwt from 'jsonwebtoken';
 import authSchema from '../models/authModel.js';
 import { loadUserCollection } from '../config/db.js'
 import validationMessage from '../utils/validationError.js';
+import 'dotenv/config'
 
 // Generate access token
 const generateAccessToken = (uuid) => {
-  return jwt.sign(uuid, 'appTokenKey', { expiresIn: '12h' });
+  return jwt.sign({ uuid }, process.env.APP_TOKEN_KEY, { expiresIn: '7d' });
 };
 
 // Login user

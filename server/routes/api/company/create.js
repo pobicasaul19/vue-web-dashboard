@@ -36,6 +36,6 @@ import { createCompany } from '../../../controller/companyController.js';
  *       400:
  *         description: Bad request
  */
-const router = express.Router();
-router.post('/create', upload.single('file'), createCompany);
+const router = express.Router()
+  .post('/create', upload.single('file'), createCompany);
 export default router;

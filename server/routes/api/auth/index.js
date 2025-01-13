@@ -27,6 +27,6 @@ import { login } from '../../../controller/authController.js';
  *       401:
  *         description: Unauthorized
  */
-const router = express.Router();
-router.post('/', login);
+const router = express.Router()
+  .post('/', login);
 export default router;

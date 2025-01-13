@@ -54,6 +54,6 @@ import { upload } from '../../../middleware/multerMiddleware.js';
  *       400:
  *         description: Bad request
  */
-const router = express.Router();
-router.post('/create', upload.single('file'), createArticle);
+const router = express.Router()
+  .post('/create', upload.single('file'), createArticle);
 export default router;

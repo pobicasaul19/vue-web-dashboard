@@ -35,7 +35,7 @@ import express from 'express';
  *       400:
  *         description: Bad request
  */
-const router = express.Router();
-router.put('/:uuid', upload.single('file'), editCompany);
+const router = express.Router()
+  .put('/:uuid', upload.single('file'), editCompany);
 export default router
 

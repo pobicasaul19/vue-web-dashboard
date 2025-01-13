@@ -13,6 +13,6 @@ import { getUsers } from '../../../controller/userController.js';
  *       400:
  *         description: Bad request
  */
-const router = express.Router();
-router.get('/', getUsers);
+const router = express.Router()
+  .get('/', getUsers);
 export default router;
