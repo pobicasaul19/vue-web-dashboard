@@ -31,7 +31,7 @@ export const getArticles = async (req, res) => {
 export const createArticle = async (req, res) => {
   try {
     const articleCollection = await loadArticleCollection();
-    const { company, title, link, date, content, status, writer, editor } = req.body;
+    const { company, title, link, date, content, status, writer, editor } = req.query || req.body;
     const file = req.file;
 
     const fields = {
@@ -86,7 +86,7 @@ export const editArticle = async (req, res) => {
   try {
     const articleCollection = await loadArticleCollection();
     const { uuid } = req.params;
-    const { company, title, link, date, content, status, writer, editor } = req.body;
+    const { company, title, link, date, content, status, writer, editor } = req.query || req.body;
     const file = req.file;
 
     const fields = {

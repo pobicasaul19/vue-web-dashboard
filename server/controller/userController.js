@@ -23,7 +23,7 @@ export const getUsers = async (req, res) => {
 export const createUser = async (req, res) => {
   try {
     const usersCollection = await loadUserCollection();
-    const { firstName, lastName, type, status, password } = req.query;
+    const { firstName, lastName, type, status, password } = req.query || req.body;
 
     const field = { firstName, lastName, type, status };
     const context = { usersCollection };
@@ -79,8 +79,7 @@ export const updateUser = async (req, res) => {
   try {
     const usersCollection = await loadUserCollection();
     const { uuid } = req.params;
-    const { firstName, lastName, type, status } = req.body;
-
+    const { firstName, lastName, type, status } = req.query || req.body;
     // Validate input
     if (!firstName || !lastName || !type || !status) {
       return res.status(400).json({ message: 'Please enter all field!' });

@@ -14,7 +14,7 @@ const generateAccessToken = (uuid) => {
 export const login = async (req, res) => {
   try {
     const usersCollection = await loadUserCollection();
-    const { email, password } = req.body;
+    const { email, password } = req.query || req.body;
 
     logger.info('Login request received', { body: req.body });
 
@@ -44,7 +44,7 @@ export const login = async (req, res) => {
     const accessToken = generateAccessToken(user.uuid);
     const { password: _, ...userWithoutPassword } = user;
     logger.info('User authenticated successfully', { user: userWithoutPassword });
-    
+
     res.status(200).json({
       data: { user: userWithoutPassword, token: accessToken },
       metadata: { message: 'Authorized' },

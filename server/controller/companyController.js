@@ -29,7 +29,7 @@ export const getCompany = async (req, res) => {
 export const createCompany = async (req, res) => {
   try {
     const companyCollection = await loadCompanyCollection();
-    const { name, status } = req.body;
+    const { name, status } = req.query || req.body;
     const file = req.file;
 
     const field = { name, file, status };
@@ -72,7 +72,7 @@ export const editCompany = async (req, res) => {
   try {
     const companyCollection = await loadCompanyCollection();
     const { uuid } = req.params;
-    const { name, status } = req.body;
+    const { name, status } = req.query || req.body;
     const file = req.file;
 
     if (!name || !status) {
