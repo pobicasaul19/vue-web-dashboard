@@ -7,9 +7,9 @@ import { logger } from '../utils/index.js';
 import { mergeRequestData } from '../utils/mergeRequestData.js';
 
 // Generate access token
-const generateAccessToken = (uuid) => {
-  return jwt.sign({ uuid }, process.env.APP_TOKEN_KEY, { expiresIn: '7d' });
-};
+// const generateAccessToken = (uuid) => {
+//   return jwt.sign({ uuid }, process.env.APP_TOKEN_KEY, { expiresIn: '7d' });
+// };
 
 // Login user
 export const login = async (req, res) => {
@@ -23,7 +23,6 @@ export const login = async (req, res) => {
     const context = { usersCollection, email };
     const errors = await validationMessage(field, authSchema, context);
     if (errors) {
-      logger.warn('Validation errors', { errors });
       return res.status(400).json({
         data: errors,
         metadata: {
@@ -42,12 +41,12 @@ export const login = async (req, res) => {
       });
     }
 
-    const accessToken = generateAccessToken(user.uuid);
+    // const accessToken = generateAccessToken(user.uuid);
     const { password: _, ...userWithoutPassword } = user;
     logger.info('User authenticated successfully', { user: userWithoutPassword });
 
     res.status(200).json({
-      data: { user: userWithoutPassword, token: accessToken },
+      data: { user: userWithoutPassword, token: 'access-token-123' },
       metadata: { message: 'Authorized' },
     });
   } catch (error) {
