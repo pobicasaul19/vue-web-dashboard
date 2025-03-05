@@ -3,6 +3,7 @@ import { loadCompanyCollection } from '../config/db.js';
 import validationMessage from '../utils/validationError.js';
 import companySchema from '../models/companyModel.js';
 import { upload } from '../middleware/multerMiddleware.js';
+import { mergeRequestData } from '../utils/mergeRequestData.js';
 
 const schema = {
   ...companySchema,
@@ -29,7 +30,7 @@ export const getCompany = async (req, res) => {
 export const createCompany = async (req, res) => {
   try {
     const companyCollection = await loadCompanyCollection();
-    const { name, status } = req.query || req.body;
+    const { name, status } = mergeRequestData(req);
     const file = req.file;
 
     const field = { name, file, status };
@@ -72,7 +73,7 @@ export const editCompany = async (req, res) => {
   try {
     const companyCollection = await loadCompanyCollection();
     const { uuid } = req.params;
-    const { name, status } = req.query || req.body;
+    const { name, status } = mergeRequestData(req);
     const file = req.file;
 
     if (!name || !status) {

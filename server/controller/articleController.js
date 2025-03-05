@@ -4,15 +4,16 @@ import validationMessage from '../utils/validationError.js';
 import articleSchema from '../models/articleModel.js';
 import { loadArticleCollection, loadCompanyCollection } from '../config/db.js';
 import { upload } from '../middleware/multerMiddleware.js';
+import { mergeRequestData } from '../utils/mergeRequestData.js';
 
 const schema = {
   ...articleSchema,
   file: {
     type: upload.single('file'),
     required: true,
-    message: 'Image file is requried.'
+    message: 'Image file is required.'
   }
-}
+};
 
 // Get article lists
 export const getArticles = async (req, res) => {
@@ -31,7 +32,7 @@ export const getArticles = async (req, res) => {
 export const createArticle = async (req, res) => {
   try {
     const articleCollection = await loadArticleCollection();
-    const { company, title, link, date, content, status, writer, editor } = req.query || req.body;
+    const { company, title, link, date, content, status, writer, editor } = mergeRequestData(req);
     const file = req.file;
 
     const fields = {
@@ -40,14 +41,14 @@ export const createArticle = async (req, res) => {
       title,
       link,
       content
-    }
-    const context = { articleCollection }
+    };
+    const context = { articleCollection };
     const errors = await validationMessage(fields, schema, context);
     if (errors) {
       return res.status(400).json({
         data: errors,
         metadata: {
-          message: 'An error occurred whiled creating new article.'
+          message: 'An error occurred while creating new article.'
         }
       });
     }
@@ -80,13 +81,12 @@ export const createArticle = async (req, res) => {
   }
 };
 
-
 // Edit article
 export const editArticle = async (req, res) => {
   try {
     const articleCollection = await loadArticleCollection();
     const { uuid } = req.params;
-    const { company, title, link, date, content, status, writer, editor } = req.query || req.body;
+    const { company, title, link, date, content, status, writer, editor } = mergeRequestData(req);
     const file = req.file;
 
     const fields = {
@@ -95,14 +95,14 @@ export const editArticle = async (req, res) => {
       title,
       link,
       content
-    }
+    };
 
     const errors = await validationMessage(fields, articleSchema);
     if (errors) {
       return res.status(400).json({
         data: errors,
         metadata: {
-          message: 'An error occurred whiled updating new article.'
+          message: 'An error occurred while updating the article.'
         }
       });
     }
@@ -125,7 +125,7 @@ export const editArticle = async (req, res) => {
       status,
       writer: writer ?? null,
       editor: editor === null ? null : editor
-    }
+    };
     await articleCollection.write();
     res.status(200).json({
       data: { ...articleCollection.data.articles[articleIndex] },

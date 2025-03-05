@@ -3,6 +3,7 @@ import { uuid, counter } from '../utils/index.js';
 import { loadUserCollection } from '../config/db.js';
 import validationMessage from '../utils/validationError.js';
 import userSchema from '../models/userModels.js';
+import { mergeRequestData } from '../utils/mergeRequestData.js';
 
 // Get user list
 export const getUsers = async (req, res) => {
@@ -23,7 +24,7 @@ export const getUsers = async (req, res) => {
 export const createUser = async (req, res) => {
   try {
     const usersCollection = await loadUserCollection();
-    const { firstName, lastName, type, status, password } = req.query || req.body;
+    const { firstName, lastName, type, status, password } = mergeRequestData(req);
 
     const field = { firstName, lastName, type, status };
     const context = { usersCollection };
@@ -79,7 +80,7 @@ export const updateUser = async (req, res) => {
   try {
     const usersCollection = await loadUserCollection();
     const { uuid } = req.params;
-    const { firstName, lastName, type, status } = req.query || req.body;
+    const { firstName, lastName, type, status } = mergeRequestData(req);
     // Validate input
     if (!firstName || !lastName || !type || !status) {
       return res.status(400).json({ message: 'Please enter all field!' });
