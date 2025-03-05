@@ -1,5 +1,6 @@
 import express from 'express';
 import { login } from '../../../controller/authController.js';
+import { ExpressAuth } from '@auth/express';
 /**
  * @swagger
  * /api/auth/login:
@@ -28,5 +29,5 @@ import { login } from '../../../controller/authController.js';
  *         description: Unauthorized
  */
 const router = express.Router()
-  .post('/', login);
+  .post('/', login, ExpressAuth({ providers: [] }));
 export default router;
