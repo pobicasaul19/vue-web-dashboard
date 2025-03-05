@@ -40,7 +40,6 @@ import getArticles from './routes/api/articles/index.js';
 import createArticle from './routes/api/articles/create.js';
 import updateArticle from './routes/api/articles/update.js';
 
-
 app.use('/api/auth/login', login);
 const dir = path.dirname(fileURLToPath(import.meta.url))
 app.use('/assets', express.static(path.join(dir, 'assets')));
@@ -62,7 +61,7 @@ app.use('/api/articles', createArticle);
 app.use('/api/articles', updateArticle);
 
 // Start the server
-const port = process.env.PORT || 5000;
+const port = 5000;
 const apiUri = process.env.APP_API_URI || `http://localhost:${port}`;
 const server = app.listen(port, async () => {
   logger.info(`Server running on ${apiUri}`);

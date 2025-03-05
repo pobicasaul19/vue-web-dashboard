@@ -10,8 +10,8 @@ import { login } from '../../../controller/authController.js';
  *       - Auth
  *     parameters:
  *       - in: query
- *         name: userName
- *         description: Username
+ *         name: email
+ *         description: Email
  *         required: true
  *         schema:
  *           type: string

@@ -13,11 +13,11 @@ const authStore = useAuthStore();
 const toast = useToast();
 
 const form = ref<loginData>({
-  userName: '',
+  email: '',
   password: ''
 });
 const errorValue = ref<Record<string, any>>({
-  userName: '',
+  email: '',
   password: ''
 });
 
@@ -45,7 +45,7 @@ const login = async () => {
   try {
     const response = await LoginService.validateLogin(form.value);
     const value = {
-      userName: null,
+      email: null,
       password: null
     };
     errorValue.value = { ...value };
@@ -53,7 +53,7 @@ const login = async () => {
   } catch (error: any) {
     const err = error.response.data.data;
     const errors = {
-      userName: joinDataError(err, 'userName'),
+      email: joinDataError(err, 'email'),
       password: joinDataError(err, 'password')
     };
     errorValue.value = { ...errors };
@@ -69,13 +69,13 @@ const login = async () => {
     <form class="border p-10 rounded-lg shadow-sm space-y-6 w-96" @submit.prevent="login">
       <div class="w-full">
         <InputText
-          id="username"
-          v-model="form.userName"
+          id="email"
+          v-model="form.email"
           type="name"
-          placeholder="Username"
+          placeholder="user@email.com"
           class="w-full"
         />
-        <small v-if="errorValue.userName" class="text-red-600">{{ errorValue.userName }}</small>
+        <small v-if="errorValue.email" class="text-red-600">{{ errorValue.email }}</small>
       </div>
       <div class="w-full">
         <Password

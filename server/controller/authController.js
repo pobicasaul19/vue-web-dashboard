@@ -14,12 +14,12 @@ const generateAccessToken = (uuid) => {
 export const login = async (req, res) => {
   try {
     const usersCollection = await loadUserCollection();
-    const { userName, password } = req.body;
+    const { email, password } = req.body;
 
     logger.info('Login request received', { body: req.body });
 
-    const field = { userName, password }
-    const context = { usersCollection, userName }
+    const field = { email, password }
+    const context = { usersCollection, email }
     const errors = await validationMessage(field, authSchema, context)
     if (errors) {
       return res.status(400).json({
@@ -30,7 +30,7 @@ export const login = async (req, res) => {
       })
     }
 
-    const user = usersCollection.data.users.find(user => user.userName === userName);
+    const user = usersCollection.data.users.find(user => user.email === email);
     const accessToken = generateAccessToken(user.uuid);
     const { password: _, ...userWithoutPassword } = user;
 

@@ -23,6 +23,7 @@
       "id": 1,
       "firstName": "super",
       "lastName": "admin",
+      "email": "superadmin@gmail.com",
       "userName": "superadmin",
       "type": "administrator",
       "status": "active",

@@ -35,7 +35,7 @@
       "link": "https://www.geeksforgeeks.org/what-is-jenkins",
       "date": "12/19/2024",
       "content": "Jenkins is a tool that is used for automation. It is mainly an open-source server that allows all the developers to build, test and deploy software. It is written in Java and runs on java only. By using Jenkins we can make a continuous integration of projects(jobs) or end-to-endpoint automation",
-      "status": "Published",
+      "status": "For Edit",
       "writer": "super admin",
       "editor": "super admin"
     }
