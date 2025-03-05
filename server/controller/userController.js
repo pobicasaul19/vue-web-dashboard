@@ -23,7 +23,7 @@ export const getUsers = async (req, res) => {
 export const createUser = async (req, res) => {
   try {
     const usersCollection = await loadUserCollection();
-    const { firstName, lastName, type, status, password } = req.body;
+    const { firstName, lastName, type, status, password } = req.query;
 
     const field = { firstName, lastName, type, status };
     const context = { usersCollection };
