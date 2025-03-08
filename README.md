@@ -1,18 +1,27 @@
-# Dashboard Site
- Develop a Dashboard Site that can create, edit a  company, article, and publish an article related to a company.
+# vue-3
 
-## Features
-* Login to the app via username and password
-* Restrict access to valid a User
-* Vue-3 (Frontend)
-* lowdb (DB)
-* Express.js and Node.js (Backend)
-You will find the base data file in `server/config/data`
+This template should help get you started developing with Vue 3 in Vite, Tailwind Css and Primevue-v4.
 
-## Command for both Client-Side and Server-Side
+## Project Setup
+
 ```sh
-npm run install:all - "npm install && npm run install:server && npm run install:client",
+npm install
 ```
+
+### Compile and Hot-Reload for Development
+
 ```sh
-npm run start - "concurrently \"npm run start:server\" \"npm run start:client\""
+npm run dev
+```
+
+### Type-Check, Compile and Minify for Production
+
+```sh
+npm run build
+```
+
+### Lint with [ESLint](https://eslint.org/)
+
+```sh
+npm run lint
 ```
