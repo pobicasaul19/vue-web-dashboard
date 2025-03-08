@@ -11,6 +11,7 @@ const props = defineProps<{
 }>();
 
 const companyForm = reactive<Record<string, any>>({
+  file: File,
   name: '',
   status: ''
 });

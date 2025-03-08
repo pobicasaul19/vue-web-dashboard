@@ -14,6 +14,7 @@ const props = defineProps<{
 const authStore = useAuthStore();
 
 const articleForm = reactive<Record<string, any>>({
+  file: File,
   company: props.company,
   title: '',
   link: '',

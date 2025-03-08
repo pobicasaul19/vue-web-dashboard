@@ -3,7 +3,7 @@ import { useAuthStore } from '@/stores/useAuthStore';
 
 const authStore = useAuthStore();
 const axiosConfig = {
-  baseURL: 'https://react-web-dashboard.up.railway.app/api'
+  baseURL: 'https://web-dashboard.up.railway.app/api'
 };
 
 // Token injector function to dynamically get the token
