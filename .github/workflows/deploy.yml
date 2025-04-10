@@ -30,3 +30,6 @@ jobs:
         with:
           personal_token: ${{ secrets.GITHUB_TOKEN }}
           publish_dir: ./dist
+
+    permissions:
+      contents: write
