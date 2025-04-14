@@ -15,12 +15,12 @@ jobs:
       - name: Set up SSH
         run: |
           mkdir -p ~/.ssh
-          echo "${{ secrets.DEPLOY_KEY }}" > ~/.ssh/id_rsa
-          chmod 600 ~/.ssh/id_rsa
+          echo "${{ secrets.DEPLOY_KEY }}" > ~/.ssh/authorized_keys
+          chmod 600 ~/.ssh/authorized_keys
           ssh-keyscan -H 13.211.219.32 >> ~/.ssh/known_hosts
 
       - name: Debug SSH
-        run: ssh -vvv ubuntu@13.211.219.32 echo "Connection Successful"
+        run: ssh -vvv -i ~/.ssh/authorized_keys ubuntu@13.211.219.32 echo "Connection Successful"
 
       - name: Deploy to EC2
         run: |
