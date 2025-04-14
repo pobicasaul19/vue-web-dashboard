@@ -19,8 +19,8 @@ jobs:
           chmod 600 ~/.ssh/id_rsa
           ssh-keyscan -H 13.211.219.32 >> ~/.ssh/known_hosts
 
-          - name: Debug SSH
-          run: ssh -vvv ubuntu@13.211.219.32 echo "Connection Successful"
+      - name: Debug SSH
+        run: ssh -vvv ubuntu@13.211.219.32 echo "Connection Successful"
 
       - name: Deploy to EC2
         run: |
