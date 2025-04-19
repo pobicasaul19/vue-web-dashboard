@@ -2,31 +2,42 @@ name: Frontend Deploy
 
 on:
   push:
-    branches: [main] # or change to 'master' or any branch you're using
+    branches:
+      - main  # Trigger this workflow on push to the 'main' branch
 
 jobs:
   deploy:
-    runs-on: ubuntu-latest
+    runs-on: ubuntu-latest  # Using the latest Ubuntu runner for the CI/CD job
 
     steps:
       - name: Checkout code
-        uses: actions/checkout@v3
+        uses: actions/checkout@v3  # Checkout the code from the repository
 
       - name: Set up SSH
         run: |
+          # Create the .ssh directory if it doesn't exist
           mkdir -p ~/.ssh
-          echo "${{ secrets.DEPLOY_KEY }}" > ~/.ssh/authorized_keys
-          chmod 600 ~/.ssh/authorized_keys
-          ssh-keyscan -H 13.211.219.32 >> ~/.ssh/known_hosts
 
-      - name: Debug SSH
-        run: ssh -vvv -i ~/.ssh/authorized_keys ubuntu@13.211.219.32 echo "Connection Successful"
+          # Add the private key from GitHub secrets to a file
+          echo "${{ secrets.DEPLOY_KEY }}" > ~/.ssh/id_rsa
+
+          # Set the correct permissions for the private key
+          chmod 600 ~/.ssh/id_rsa
+
+          # Add the EC2 host to known hosts to avoid SSH verification issues
+          ssh-keyscan -H 13.211.219.32 >> ~/.ssh/known_hosts  # Replace with your EC2 public IP
+
+      - name: Test SSH connection
+        run: |
+          # Test the SSH connection to ensure it works
+          ssh -i ~/.ssh/id_rsa -o StrictHostKeyChecking=no ubuntu@13.211.219.32 echo "✅ Connected!"  # Replace with your EC2 IP
 
       - name: Deploy to EC2
         run: |
-          ssh ubuntu@13.211.219.32 '
-            cd ~/app/web-dashoard/vue-web-dashboard &&
-            git pull &&
-            npm install &&
-            npm run build
+          # SSH into the EC2 instance and deploy your app
+          ssh -i ~/.ssh/id_rsa -o StrictHostKeyChecking=no ubuntu@13.211.219.32 '
+            cd ~/app/web-dashboard/vue-web-dashboard &&  # Ensure correct path here
+            git pull &&  # Pull the latest code from the repository
+            npm install &&  # Install any dependencies
+            npm run build  # Build the project
           '
