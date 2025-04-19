@@ -10,26 +10,32 @@ jobs:
     runs-on: ubuntu-latest
 
     steps:
-    - name: Checkout Repo
-      uses: actions/checkout@v3
+      - name: Checkout Repo
+        uses: actions/checkout@v3
 
-    - name: Copy Files via SSH
-      uses: appleboy/scp-action@master
-      with:
-        host: ${{ secrets.HOST }}
-        username: ubuntu
-        key: ${{ secrets.KEY }}
-        source: "."
-        target: "/home/ubuntu/vue-web-dashboard"
+      - name: Copy Files via SSH
+        uses: appleboy/scp-action@master
+        with:
+          host: ${{ secrets.HOST }}
+          username: ubuntu
+          key: ${{ secrets.KEY }}
+          source: '.'
+          target: '~/vue-web-dashboard'
 
-    - name: SSH and Build Frontend
-      uses: appleboy/ssh-action@master
-      with:
-        host: ${{ secrets.HOST }}
-        username: ubuntu
-        key: ${{ secrets.KEY }}
-        script: |
-          cd /home/ubuntu/vue-web-dashboard
-          npm install
-          npm run build
-          pm2 restart frontend
+      - name: SSH and Build Frontend
+        uses: appleboy/ssh-action@master
+        with:
+          host: ${{ secrets.HOST }}
+          username: ubuntu
+          key: ${{ secrets.KEY }}
+          script: |
+            # Navigate to project directory
+            cd ~/vue-web-dashboard
+
+            # Pull the latest changes from Git
+            git pull origin main
+
+            # Install dependencies and build the app
+            npm install
+            npm run build
+            pm2 restart frontend
